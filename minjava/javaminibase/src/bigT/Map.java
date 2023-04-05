@@ -6,6 +6,7 @@ import global.Convert;
 import global.GlobalConst;
 import heap.FieldNumberOutOfBoundException;
 import heap.InvalidMapSizeException;
+import heap.InvalidTupleSizeException;
 import heap.InvalidTypeException;
 
 import java.io.IOException;
@@ -234,44 +235,80 @@ public class Map implements GlobalConst {
         return s;
     }
 
-    public void setHeader(AttrType[] types, short[] stringSizes) throws InvalidMapSizeException, IOException, InvalidTypeException, InvalidStringSizeArrayException {
+    public void setHdr (short numFlds,  AttrType types[], short strSizes[])
+            throws IOException, InvalidTypeException, InvalidTupleSizeException
+    {
+        if((numFlds +2)*2 > MAX_SIZE)
+            throw new InvalidTupleSizeException (null, "TUPLE: TUPLE_TOOBIG_ERROR");
 
-        if (stringSizes.length != 3) {
-            throw new InvalidStringSizeArrayException(null, "String sizes array must exactly be 3");
-        }
-        this.fieldCount = NUM_FIELDS;
-        Convert.setShortValue(NUM_FIELDS, this.mapOffset, this.data);
-        this.fieldOffset = new short[NUM_FIELDS + 1];
-        int position = this.mapOffset + 2;
-        this.fieldOffset[0] = (short) ((NUM_FIELDS + 2) * 2 + this.mapOffset);
-        Convert.setShortValue(this.fieldOffset[0], position, data);
-        position += 2;
+        fieldCount = numFlds;
+        Convert.setShortValue(numFlds, mapOffset, data);
+        fieldOffset = new short[numFlds+1];
+        int pos = mapOffset+2;  // start position for fldOffset[]
 
-        short increment;
-        short stringCount = 0;
-        for (short i = 0; i < NUM_FIELDS; i++) {
-            switch (types[i].attrType) {
+        //sizeof short =2  +2: array siaze = numFlds +1 (0 - numFilds) and
+        //another 1 for fldCnt
+        fieldOffset[0] = (short) ((numFlds +2) * 2 + mapOffset);
+
+        Convert.setShortValue(fieldOffset[0], pos, data);
+        pos +=2;
+        short strCount =0;
+        short incr;
+        int i;
+
+        for (i=1; i<numFlds; i++)
+        {
+            switch(types[i-1].attrType) {
+
                 case AttrType.attrInteger:
-                    increment = 4;
+                    incr = 4;
                     break;
+
+                case AttrType.attrReal:
+                    incr =4;
+                    break;
+
                 case AttrType.attrString:
-                    increment = (short) (stringSizes[stringCount++] + 2);
+                    incr = (short) (strSizes[strCount] +2);  //strlen in bytes = strlen +2
+                    strCount++;
                     break;
+
                 default:
-                    throw new InvalidTypeException(null, "MAP: MAP_TYPE_ERROR");
+                    throw new InvalidTypeException (null, "TUPLE: TUPLE_TYPE_ERROR");
             }
-            this.fieldOffset[i + 1] = (short) (this.fieldOffset[i] + increment);
-            Convert.setShortValue(this.fieldOffset[i + 1], position, data);
-            position += 2;
+            fieldOffset[i]  = (short) (fieldOffset[i-1] + incr);
+            Convert.setShortValue(fieldOffset[i], pos, data);
+            pos +=2;
+
+        }
+        switch(types[numFlds -1].attrType) {
+
+            case AttrType.attrInteger:
+                incr = 4;
+                break;
+
+            case AttrType.attrReal:
+                incr =4;
+                break;
+
+            case AttrType.attrString:
+                incr =(short) ( strSizes[strCount] +2);  //strlen in bytes = strlen +2
+                break;
+
+            default:
+                throw new InvalidTypeException (null, "TUPLE: TUPLE_TYPE_ERROR");
         }
 
-        this.mapLength = this.fieldOffset[NUM_FIELDS] - this.mapOffset;
+        fieldOffset[numFlds] = (short) (fieldOffset[i-1] + incr);
+        Convert.setShortValue(fieldOffset[numFlds], pos, data);
 
-        if (this.mapLength > MAX_SIZE) {
-            throw new InvalidMapSizeException(null, "MAP: MAP_TOOBIG_ERROR");
-        }
+        mapLength = fieldOffset[numFlds] - mapOffset;
 
+        if(mapLength > MAX_SIZE)
+            throw new InvalidTupleSizeException (null, "TUPLE: TUPLE_TOOBIG_ERROR");
     }
+
+
 
     public String getGenericValue(String field) throws Exception {
         if (field.matches(".*row.*")) {

@@ -1,5 +1,6 @@
 package iterator;
 
+import bigT.Map;
 import heap.*;
 import global.*;
 import java.io.*;
@@ -22,8 +23,8 @@ public class PredEval
    *@exception FieldNumberOutOfBoundException field number exceeds limit
    *@exception PredEvalException exception from this method
    */
-  public static boolean Eval(CondExpr p[], Tuple t1, Tuple t2, AttrType in1[], 
-			     AttrType in2[])
+  public static boolean Eval(CondExpr p[], Map t1, Map t2, AttrType in1[],
+							 AttrType in2[])
     throws IOException,
 	   UnknowAttrType,
 	   InvalidTupleSizeException,

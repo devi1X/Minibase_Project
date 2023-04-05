@@ -292,7 +292,8 @@ public class Heapfile implements Filetype,  GlobalConst {
       //  - no datapage pinned yet    
       
     } // end of constructor 
-  
+
+
   /** Return number of records in file.
    *
    * @exception InvalidSlotNumberException invalid slot number
@@ -350,7 +351,8 @@ public class Heapfile implements Filetype,  GlobalConst {
       
       return answer;
     } // end of getRecCnt
-  
+
+
   /** Insert record into file, return its Rid.
    *
    * @param recPtr pointer of the record
