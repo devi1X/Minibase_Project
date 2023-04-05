@@ -7,6 +7,8 @@ package heap;
  */
 
 import java.io.*;
+
+import bigT.Map;
 import global.*;
 import bufmgr.*;
 import diskmgr.*;
@@ -40,7 +42,7 @@ public class Scan implements GlobalConst{
     /** record ID of the DataPageInfo struct (in the directory page) which
      * describes the data page where our current record lives.
      */
-    private RID datapageRid = new RID();
+    private MID datapageRid = new MID();
 
     /** the actual PageId of the data page with the current record */
     private PageId datapageId = new PageId();
@@ -49,7 +51,7 @@ public class Scan implements GlobalConst{
     private HFPage datapage = new HFPage();
 
     /** record ID of the current record (from the current data page) */
-    private RID userrid = new RID();
+    private MID userrid = new MID();
 
     /** Status of next user status */
     private boolean nextUserStatus;
@@ -81,11 +83,11 @@ public class Scan implements GlobalConst{
    * @param rid Record ID of the record
    * @return the Tuple of the retrieved record.
    */
-  public Tuple getNext(RID rid) 
+  public Map getNext(MID rid)
     throws InvalidTupleSizeException,
 	   IOException
   {
-    Tuple recptrtuple = null;
+    Map recptrtuple = null;
     
     if (nextUserStatus != true) {
         nextDataPage();
@@ -122,11 +124,11 @@ public class Scan implements GlobalConst{
      * @return 	true if successful, 
      *			false otherwise.
      */
-  public boolean position(RID rid) 
+  public boolean position(MID rid)
     throws InvalidTupleSizeException,
 	   IOException
   { 
-    RID    nxtrid = new RID();
+    MID    nxtrid = new MID();
     boolean bst;
 
     bst = peekNext(nxtrid);
@@ -249,7 +251,7 @@ public class Scan implements GlobalConst{
 	   IOException
   {
     DataPageInfo dpinfo;
-    Tuple        rectuple = null;
+    Map        rectuple = null;
     Boolean      bst;
 
     /** copy data about first directory page */
@@ -345,7 +347,7 @@ public class Scan implements GlobalConst{
 	    e.printStackTrace();
 	  }
 	  
-	  if (rectuple.getLength() != DataPageInfo.size)
+	  if (rectuple.getMapLength() != DataPageInfo.size)
 	    return false;
 	  
 	  dpinfo = new DataPageInfo(rectuple);
@@ -402,7 +404,7 @@ public class Scan implements GlobalConst{
     
     boolean nextDataPageStatus;
     PageId nextDirPageId = new PageId();
-    Tuple rectuple = null;
+    Map rectuple = null;
 
   // ASSERTIONS:
   // - this->dirpageId has Id of current directory page
@@ -545,7 +547,7 @@ public class Scan implements GlobalConst{
 	  System.err.println("HeapFile: Error in Scan" + e);
 	}
 	
-	if (rectuple.getLength() != DataPageInfo.size)
+	if (rectuple.getMapLength() != DataPageInfo.size)
 	  return false;
                         
 	dpinfo = new DataPageInfo(rectuple);
@@ -578,7 +580,7 @@ public class Scan implements GlobalConst{
   }
 
 
-  private boolean peekNext(RID rid) {
+  private boolean peekNext(MID rid) {
     
     rid.pageNo.pid = userrid.pageNo.pid;
     rid.slotNo = userrid.slotNo;
@@ -590,11 +592,11 @@ public class Scan implements GlobalConst{
   /** Move to the next record in a sequential scan.
    * Also returns the RID of the (new) current record.
    */
-  private boolean mvNext(RID rid) 
+  private boolean mvNext(MID rid)
     throws InvalidTupleSizeException,
 	   IOException
   {
-    RID nextrid;
+    MID nextrid;
     boolean status;
 
     if (datapage == null)
@@ -621,7 +623,7 @@ public class Scan implements GlobalConst{
 
     /**
    * short cut to access the pinPage function in bufmgr package.
-   * @see bufmgr.pinPage
+   * @see //bufmgr.pinPage
    */
   private void pinPage(PageId pageno, Page page, boolean emptyPage)
     throws HFBufMgrException {
@@ -637,7 +639,7 @@ public class Scan implements GlobalConst{
 
   /**
    * short cut to access the unpinPage function in bufmgr package.
-   * @see bufmgr.unpinPage
+   * @see //bufmgr.unpinPage
    */
   private void unpinPage(PageId pageno, boolean dirty)
     throws HFBufMgrException {

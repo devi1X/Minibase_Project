@@ -82,7 +82,7 @@ public class Map implements GlobalConst {
     }
 
 
-    public byte[] getData() {
+    public byte[] returnMapByteArray() {
         return data;
     }
 
@@ -234,10 +234,10 @@ public class Map implements GlobalConst {
         return s;
     }
 
-    public void setHeader(AttrType[] types, short[] stringSizes) throws InvalidMapSizeException, IOException, InvalidTypeException, BigT.InvalidStringSizeArrayException {
+    public void setHeader(AttrType[] types, short[] stringSizes) throws InvalidMapSizeException, IOException, InvalidTypeException, InvalidStringSizeArrayException {
 
         if (stringSizes.length != 3) {
-            throw new BigT.InvalidStringSizeArrayException(null, "String sizes array must exactly be 3");
+            throw new InvalidStringSizeArrayException(null, "String sizes array must exactly be 3");
         }
         this.fieldCount = NUM_FIELDS;
         Convert.setShortValue(NUM_FIELDS, this.mapOffset, this.data);

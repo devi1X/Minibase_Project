@@ -5,6 +5,7 @@ package heap;
 import java.io.*;
 import java.lang.*;
 
+import bigT.Map;
 import global.*;
 import diskmgr.*;
 
@@ -334,10 +335,10 @@ public class HFPage extends Page
    * @exception IOException I/O errors
    * in C++ Status insertRecord(char *recPtr, int recLen, RID& rid)
    */
-  public RID insertRecord ( byte [] record)		
+  public MID insertRecord ( byte [] record)
     throws IOException
     {
-      RID rid = new RID();
+      MID rid = new MID();
       
       int recLen = record.length;
       int spaceNeeded = recLen + SIZE_OF_SLOT;
@@ -402,7 +403,7 @@ public class HFPage extends Page
    * @exception IOException I/O errors
    * in C++ Status deleteRecord(const RID& rid)
    */
-  public void deleteRecord ( RID rid )
+  public void deleteRecord ( MID rid )
     throws IOException,  
 	   InvalidSlotNumberException
     {
@@ -464,10 +465,10 @@ public class HFPage extends Page
    * in C++ Status firstRecord(RID& firstRid)
    * 
    */ 
-  public RID firstRecord() 
+  public MID firstRecord()
     throws IOException
     {
-      RID rid = new RID();
+      MID rid = new MID();
       // find the first non-empty slot
       
       
@@ -501,10 +502,10 @@ public class HFPage extends Page
    * @exception  IOException I/O errors
    * in C++ Status nextRecord (RID curRid, RID& nextRid)
    */
-  public RID nextRecord (RID curRid) 
+  public MID nextRecord (MID curRid)
     throws IOException 
     {
-      RID rid = new RID();
+      MID rid = new MID();
       slotCnt = Convert.getShortValue (SLOT_CNT, data);
       
       int i=curRid.slotNo;
@@ -540,7 +541,7 @@ public class HFPage extends Page
    * @exception  	IOException I/O errors
    * @see 	Tuple
    */
-  public Tuple getRecord ( RID rid ) 
+  public Map getRecord ( MID rid )
     throws IOException,  
 	   InvalidSlotNumberException
     {
@@ -561,7 +562,7 @@ public class HFPage extends Page
 	  offset = getSlotOffset (slotNo);
 	  record = new byte[recLen];
 	  System.arraycopy(data, offset, record, 0, recLen);
-	  Tuple tuple = new Tuple(record, 0, recLen);
+	  Map tuple = new Map(record, 0, recLen);
 	  return tuple;
 	}
       
@@ -582,7 +583,7 @@ public class HFPage extends Page
    * @exception   IOException I/O errors
    * @see 	Tuple
    */  
-  public Tuple returnRecord ( RID rid )
+  public Map returnRecord ( MID rid )
     throws IOException, 
 	   InvalidSlotNumberException
     {
@@ -603,7 +604,7 @@ public class HFPage extends Page
 	{
 	  
 	  offset = getSlotOffset (slotNo);
-	  Tuple tuple = new Tuple(data, offset, recLen);
+	  Map tuple = new Map(data, offset, recLen);
 	  return tuple;
 	}
       

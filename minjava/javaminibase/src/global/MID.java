@@ -1,70 +1,53 @@
-/*  File RID.java   */
-
 package global;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Serializable;
 
-/** class RID
- */
+public class MID implements Serializable {
+    private static final long serialVersionUID = -1L;
 
-public class MID{
-
-    /** public int slotNo
-     */
     public int slotNo;
-
-    /** public PageId pageNo
-     */
     public PageId pageNo = new PageId();
 
-    /**
-     * default constructor of class
-     */
-    public MID () { }
-
-    /**
-     *  constructor of class
-     */
-    public MID (PageId pageno, int slotno)
-    {
-        pageNo = pageno;
-        slotNo = slotno;
+    public int getSlotNo() {
+        return slotNo;
     }
 
-    /**
-     * make a copy of the given rid
-     */
-    public void copyRid (MID rid)
-    {
-        pageNo = rid.pageNo;
-        slotNo = rid.slotNo;
+    public void setSlotNo(int slotNo) {
+        this.slotNo = slotNo;
     }
 
-    /** Write the rid into a byte array at offset
-     * @param ary the specified byte array
-     * @param offset the offset of byte array to write
-     * @exception java.io.IOException I/O errors
-     */
-    public void writeToByteArray(byte [] ary, int offset)
-            throws java.io.IOException
-    {
-        Convert.setIntValue ( slotNo, offset, ary);
-        Convert.setIntValue ( pageNo.pid, offset+4, ary);
+    public PageId getPageNo() {
+        return pageNo;
     }
 
-
-    /** Compares two RID object, i.e, this to the rid
-     * @param rid RID object to be compared to
-     * @return true is they are equal
-     *         false if not.
-     */
-    public boolean equals(MID rid) {
-
-        if ((this.pageNo.pid==rid.pageNo.pid)
-                &&(this.slotNo==rid.slotNo))
-            return true;
-        else
-            return false;
+    public void setPageNo(PageId pageNo) {
+        this.pageNo = pageNo;
     }
 
+    public MID(PageId pageNo, int slotNo) {
+        this.slotNo = slotNo;
+        this.pageNo = pageNo;
+    }
+
+    public MID() {
+    }
+
+    public void copyMid(MID mid) {
+        this.slotNo = mid.slotNo;
+        this.pageNo = mid.pageNo;
+    }
+
+    public void writeTOByteArray(byte[] array, int offset) throws IOException {
+        Convert.setIntValue(slotNo, offset, array);
+        Convert.setIntValue(pageNo.pid, offset + 4, array);
+    }
+
+    public boolean equals(MID mid) {
+        return this.pageNo.pid == mid.pageNo.pid && this.slotNo == mid.slotNo;
+    }
+
+    public String toString(){
+        return "{'PageNo':" + this.pageNo.pid + ", 'SlotNo:'" + this.slotNo + "}";
+    }
 }
