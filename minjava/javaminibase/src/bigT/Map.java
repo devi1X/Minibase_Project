@@ -202,11 +202,12 @@ public class Map implements GlobalConst {
         this.mapOffset = offset;
     }
 
-    public void mapSet(byte[] fromMap, int offset) {
-        System.arraycopy(fromMap, offset, this.data, 0, this.mapLength);
-        this.mapOffset = 0;
+    public void mapSet(byte [] record, int offset, int length)
+    {
+        System.arraycopy(record, offset, data, 0, length);
+        mapOffset = 0;
+        mapLength = length;
     }
-
     private void setFieldOffsetFromData() throws IOException {
         int position = this.mapOffset + 2;
         this.fieldOffset = new short[NUM_FIELDS + 1];

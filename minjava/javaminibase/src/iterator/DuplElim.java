@@ -1,5 +1,6 @@
 package iterator;
 
+import bigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -23,15 +24,15 @@ public class DuplElim extends Iterator
   
   private AttrType  sortFldType;
   private int       sortFldLen;
-  private Tuple    Jtuple;
+  private Map Jtuple;
   
-  private Tuple TempTuple1, TempTuple2;
+  private Map TempTuple1, TempTuple2;
   
   /**
    *Constructor to set up some information.
-   *@param in[]  Array containing field types of R.
+   *@param //in[]  Array containing field types of R.
    *@param len_in # of columns in R.
-   *@param s_sizes[] store the length of string appeared in tuple
+   *@param //s_sizes[] store the length of string appeared in tuple
    *@param am input relation iterator, access method for left input to join,
    *@param amt_of_mem the page numbers required IN PAGES
    *@exception IOException some I/O fault
@@ -50,7 +51,7 @@ public class DuplElim extends Iterator
       System.arraycopy(in,0,_in,0,in.length);
       in_len = len_in;
      
-      Jtuple =  new Tuple();
+      Jtuple =  new Map();
       try {
 	Jtuple.setHdr(len_in, _in, s_sizes);
       }catch (Exception e){
@@ -88,8 +89,8 @@ public class DuplElim extends Iterator
 	}
 
       // Allocate memory for the temporary tuples
-      TempTuple1 =  new Tuple();
-      TempTuple2 = new Tuple();
+      TempTuple1 =  new Map();
+      TempTuple2 = new Map();
       try{
 	TempTuple1.setHdr(in_len, _in, s_sizes);
 	TempTuple2.setHdr(in_len, _in, s_sizes);
@@ -116,7 +117,7 @@ public class DuplElim extends Iterator
    *@exception UnknownKeyTypeException key type unknown
    *@exception Exception other exceptions
    */
-  public Tuple get_next() 
+  public Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
@@ -131,23 +132,23 @@ public class DuplElim extends Iterator
 	   UnknownKeyTypeException,
 	   Exception
     {
-      Tuple t;
+      Map t;
       
       if (done)
         return null;
-      Jtuple.tupleCopy(TempTuple1);
+      Jtuple.copyMap(TempTuple1);
      
       do {
 	if ((t = _am.get_next()) == null) {
 	  done = true;                    // next call returns DONE;
 	  return null;
 	} 
-	TempTuple2.tupleCopy(t);
-      } while (TupleUtils.Equal(TempTuple1, TempTuple2, _in, in_len));
+	TempTuple2.copyMap(t);
+      } while (MapUtils.Equal(TempTuple1, TempTuple2, _in, in_len));
       
       // Now copy the the TempTuple2 (new o/p tuple) into TempTuple1.
-      TempTuple1.tupleCopy(TempTuple2);
-      Jtuple.tupleCopy(TempTuple2);
+      TempTuple1.copyMap(TempTuple2);
+      Jtuple.copyMap(TempTuple2);
       return Jtuple ;
     }
  

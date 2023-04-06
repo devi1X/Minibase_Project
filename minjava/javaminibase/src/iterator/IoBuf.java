@@ -1,5 +1,6 @@
 
 package iterator;
+import bigT.Map;
 import heap.*;
 import global.*;
 import diskmgr.*;
@@ -16,7 +17,7 @@ public class IoBuf implements GlobalConst{
   /**
    *Initialize some necessary inormation, call Iobuf to create the
    *object, and call init to finish instantiation
-   *@param bufs[][] the I/O buffer
+   *@param //bufs[][] the I/O buffer
    *@param n_pages the numbers of page of this buffer
    *@param tSize the page size
    *@param temp_fd the reference to a Heapfile
@@ -49,7 +50,7 @@ public class IoBuf implements GlobalConst{
    *@exception IOException  some I/O fault
    *@exception Exception  other exceptions
    */
-  public void Put(Tuple buf)
+  public void Put(Map buf)
     throws NoOutputBuffer,
 	   IOException,
 	   Exception
@@ -58,7 +59,7 @@ public class IoBuf implements GlobalConst{
 	throw new NoOutputBuffer("IoBuf:Trying to write to io buffer when it is acting as a input buffer");
       
       byte[] copybuf;
-      copybuf = buf.getTupleByteArray();
+      copybuf = buf.getMapByteArray();
       System.arraycopy(copybuf,0,_bufs[curr_page],t_wr_to_pg*t_size,t_size); 
       
       t_written++; t_wr_to_pg++; t_wr_to_buf++; dirty = true;
@@ -85,11 +86,11 @@ public class IoBuf implements GlobalConst{
    *@exception IOException some I/O fault
    *@exception Exception other exceptions
    */
-  public Tuple Get(Tuple  buf)
+  public Map Get(Map  buf)
     throws IOException,
 	   Exception
     {
-      Tuple temptuple;
+      Map temptuple;
       if (done){
 	buf =null;
 	return null;
@@ -115,7 +116,7 @@ public class IoBuf implements GlobalConst{
 	      buf = null;
 	      return null;
 	    }
-	  buf.tupleSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size);      
+	  buf.mapSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size);
 	  
 	  // Setup for next read
 	  t_rd_from_pg++;
@@ -145,7 +146,7 @@ public class IoBuf implements GlobalConst{
 	{
 	  for (count = 0; count <= curr_page; count++)
 	    {
-	      RID rid;
+	      MID rid;
 
 	      // Will have to go thru entire buffer writing tuples to disk
 	      for (int i = 0; i < t_wr_to_pg; i++)

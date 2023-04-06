@@ -75,8 +75,8 @@ public abstract class pnodePQ
    * @exception TupleUtilsException error in tuple compare routines
    */
   public int pnodeCMP(pnode a, pnode b) 
-         throws IOException, UnknowAttrType, TupleUtilsException {
-    int ans = TupleUtils.CompareTupleWithTuple(fld_type, a.tuple, fld_no, b.tuple, fld_no);
+         throws IOException, UnknowAttrType, MapUtilsException {
+    int ans = MapUtils.CompareTupleWithTuple(fld_type, a.tuple, fld_no, b.tuple, fld_no);
     return ans;
   }
 
@@ -91,7 +91,7 @@ public abstract class pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */  
-  public boolean pnodeEQ(pnode a, pnode b) throws IOException, UnknowAttrType, TupleUtilsException {
+  public boolean pnodeEQ(pnode a, pnode b) throws IOException, UnknowAttrType, MapUtilsException {
     return pnodeCMP(a, b) == 0;
   }
   

@@ -1,6 +1,7 @@
 package iterator;
 
-import heap.*;          
+import bigT.Map;
+import heap.*;
 import global.*;
 import diskmgr.*;
 import bufmgr.*;
@@ -22,7 +23,7 @@ public class SpoofIbuf implements GlobalConst  {
   /**
    *Initialize some necessary inormation, call Iobuf to create the
    *object, and call init to finish intantiation
-   *@param bufs[][] the I/O buffer
+   *@param ///bufs[][] the I/O buffer
    *@param n_pages the numbers of page of this buffer
    *@param tSize the tuple size
    *@param fd the reference to an Heapfile
@@ -67,7 +68,7 @@ public class SpoofIbuf implements GlobalConst  {
    *@exception IOException some I/O fault
    *@exception Exception other exceptions
    */
-  public  Tuple Get(Tuple  buf)throws IOException, Exception
+  public Map Get(Map  buf)throws IOException, Exception
     {
       if (tot_t_proc == n_tuples) done = true;
       
@@ -88,7 +89,7 @@ public class SpoofIbuf implements GlobalConst  {
 	  done = true; buf = null;return null;
 	}
  
-      buf.tupleSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size); 
+      buf.mapSet(_bufs[curr_page],t_rd_from_pg*t_size,t_size);
       tot_t_proc++;
       
       // Setup for next read
@@ -119,7 +120,7 @@ public class SpoofIbuf implements GlobalConst  {
   private int readin()throws IOException,InvalidTupleSizeException
     {
       int   t_read = 0, tot_read = 0;
-      Tuple t      = new Tuple ();
+      Map t      = new Map ();
       byte[] t_copy;
       
       curr_page = 0;
@@ -127,10 +128,10 @@ public class SpoofIbuf implements GlobalConst  {
 	{
 	  while (t_read < t_per_pg)
 	    {
-	      RID rid =new RID();
+	      MID rid =new MID();
 	      try {
 		if ( (t = hf_scan.getNext(rid)) == null) return tot_read;
-		t_copy = t.getTupleByteArray();
+		t_copy = t.getMapByteArray();
 		System.arraycopy(t_copy,0,_bufs[curr_page],t_read*t_size,t_size); 
 	      }
 	      catch (Exception e) {

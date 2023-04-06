@@ -1,5 +1,6 @@
 package iterator;
 
+import bigT.Map;
 import heap.*;
 import global.*;
 import diskmgr.*;
@@ -29,15 +30,15 @@ public class SortMerge extends Iterator implements GlobalConst
   private  boolean        process_next_block;
   private  short     inner_str_sizes[];
   private  IoBuf    io_buf1,  io_buf2;
-  private  Tuple     TempTuple1,  TempTuple2;
-  private  Tuple     tuple1,  tuple2;
+  private  Map TempTuple1,  TempTuple2;
+  private  Map     tuple1,  tuple2;
   private  boolean       done;
   private  byte    _bufs1[][],_bufs2[][];
   private  int        _n_pages; 
   private  Heapfile temp_file_fd1, temp_file_fd2;
   private  AttrType   sortFldType;
   private  int        t1_size, t2_size;
-  private  Tuple     Jtuple;
+  private  Map     Jtuple;
   private  FldSpec   perm_mat[];
   private  int        nOutFlds;
   
@@ -92,13 +93,11 @@ public class SortMerge extends Iterator implements GlobalConst
 		   FldSpec   proj_list[],
 		   int       n_out_flds
 		   )
-    throws JoinNewFailed ,
-	   JoinLowMemory,
-	   SortException,
-	   TupleUtilsException,
-	   IOException
-		   
-    {
+		  throws JoinNewFailed,
+		  JoinLowMemory,
+		  SortException,
+		  TupleUtilsException,
+		  IOException, MapUtilsException {
       _in1 = new AttrType[in1.length];
       _in2 = new AttrType[in2.length];
       System.arraycopy(in1,0,_in1,0,in1.length);
@@ -106,18 +105,18 @@ public class SortMerge extends Iterator implements GlobalConst
       in1_len = len_in1;
       in2_len = len_in2;
       
-      Jtuple = new Tuple();
+      Jtuple = new Map();
       AttrType[] Jtypes = new AttrType[n_out_flds];
       short[]    ts_size = null;
       perm_mat = proj_list;
       nOutFlds = n_out_flds;
       try {
-	ts_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes,
+	ts_size = MapUtils.setup_op_tuple(Jtuple, Jtypes,
 					    in1, len_in1, in2, len_in2,
 					    s1_sizes, s2_sizes, 
 					    proj_list,n_out_flds );
       }catch (Exception e){
-	throw new TupleUtilsException (e, "Exception is caught by SortMerge.java");
+	throw new MapUtilsException (e, "Exception is caught by SortMerge.java");
       }
       
       int n_strs2 = 0;
@@ -160,10 +159,10 @@ public class SortMerge extends Iterator implements GlobalConst
       io_buf2 = new IoBuf();
       
       // Allocate memory for the temporary tuples
-      TempTuple1 = new Tuple();
-      TempTuple2 =  new Tuple();
-      tuple1 = new Tuple();
-      tuple2 =  new Tuple();
+      TempTuple1 = new Map();
+      TempTuple2 =  new Map();
+      tuple1 = new Map();
+      tuple2 =  new Map();
       
       
       if (io_buf1  == null || io_buf2  == null ||
@@ -236,7 +235,7 @@ public class SortMerge extends Iterator implements GlobalConst
    *@exception Exception other exceptions
    */
 
-  public Tuple get_next() 
+  public Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
@@ -253,7 +252,7 @@ public class SortMerge extends Iterator implements GlobalConst
     {
       
       int    comp_res;
-      Tuple _tuple1,_tuple2;
+      Map _tuple1,_tuple2;
       if (done) return null;
       
       while (true)
@@ -278,7 +277,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	      // Note that depending on whether the sort order
 	      // is ascending or descending,
 	      // this loop will be modified.
-	      comp_res = TupleUtils.CompareTupleWithTuple(sortFldType, tuple1,
+	      comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
 							  jc_in1, tuple2, jc_in2);
 	      while ((comp_res < 0 && _order.tupleOrder == TupleOrder.Ascending) ||
 		     (comp_res > 0 && _order.tupleOrder == TupleOrder.Descending))
@@ -288,11 +287,11 @@ public class SortMerge extends Iterator implements GlobalConst
 		    return null;
 		  }
 		  
-		  comp_res = TupleUtils.CompareTupleWithTuple(sortFldType, tuple1,
+		  comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
 							      jc_in1, tuple2, jc_in2);
 		}
 	      
-	      comp_res = TupleUtils.CompareTupleWithTuple(sortFldType, tuple1,
+	      comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
 							  jc_in1, tuple2, jc_in2);
 	      while ((comp_res > 0 && _order.tupleOrder == TupleOrder.Ascending) ||
 		     (comp_res < 0 && _order.tupleOrder == TupleOrder.Descending))
@@ -303,7 +302,7 @@ public class SortMerge extends Iterator implements GlobalConst
 		      return null;
 		    }
 		  
-		  comp_res = TupleUtils.CompareTupleWithTuple(sortFldType, tuple1,
+		  comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
 							      jc_in1, tuple2, jc_in2);
 		}
 	      
@@ -313,13 +312,13 @@ public class SortMerge extends Iterator implements GlobalConst
 		  continue;
 		}
 	      
-	      TempTuple1.tupleCopy(tuple1);
-	      TempTuple2.tupleCopy(tuple2); 
+	      TempTuple1.copyMap(tuple1);
+	      TempTuple2.copyMap(tuple2);
 	      
 	      io_buf1.init(_bufs1,       1, t1_size, temp_file_fd1);
 	      io_buf2.init(_bufs2,       1, t2_size, temp_file_fd2);
 	      
-	      while (TupleUtils.CompareTupleWithTuple(sortFldType, tuple1,
+	      while (MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
 						      jc_in1, TempTuple1, jc_in1) == 0)
 		{
 		  // Insert tuple1 into io_buf1
@@ -336,7 +335,7 @@ public class SortMerge extends Iterator implements GlobalConst
 		    }
 		}
 	      
-	      while (TupleUtils.CompareTupleWithTuple(sortFldType, tuple2,
+	      while (MapUtils.CompareTupleWithTuple(sortFldType, tuple2,
 						      jc_in2, TempTuple2, jc_in2) == 0)
 		{
 		  // Insert tuple2 into io_buf2

@@ -1,4 +1,5 @@
 package iterator;
+import bigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -55,15 +56,15 @@ public class OBuf implements GlobalConst{
    *@exception IOException  some I/O fault
    *@exception Exception other exceptions
    */
-  public Tuple  Put(Tuple buf)
+  public Map Put(Map buf)
     throws IOException,
 	   Exception
     {
       
       byte[] copybuf;
-      copybuf = buf.getTupleByteArray();
+      copybuf = buf.getMapByteArray();
       System.arraycopy(copybuf,0,_bufs[curr_page],t_wr_to_pg*t_size,t_size); 
-      Tuple tuple_ptr = new Tuple(_bufs[curr_page] , t_wr_to_pg * t_size,t_size);
+      Map tuple_ptr = new Map(_bufs[curr_page] , t_wr_to_pg * t_size,t_size);
       
       t_written++; t_wr_to_pg++; t_wr_to_buf++; dirty = true;
       
@@ -101,7 +102,7 @@ public class OBuf implements GlobalConst{
 	{
 	  for (count = 0; count <= curr_page; count++)
 	    {
-	      RID rid;
+	      MID rid;
 	      // Will have to go thru entire buffer writing tuples to disk
 	      
 	      if (count == curr_page)
