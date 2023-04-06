@@ -1,6 +1,7 @@
 package iterator;
    
 
+import bigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -21,8 +22,8 @@ public class FileScan extends  Iterator
   private short[] s_sizes; 
   private Heapfile f;
   private Scan scan;
-  private Tuple     tuple1;
-  private Tuple    Jtuple;
+  private Map tuple1;
+  private Map    Jtuple;
   private int        t1_size;
   private int nOutFlds;
   private CondExpr[]  OutputFilter;
@@ -33,8 +34,8 @@ public class FileScan extends  Iterator
   /**
    *constructor
    *@param file_name heapfile to be opened
-   *@param in1[]  array showing what the attributes of the input fields are. 
-   *@param s1_sizes[]  shows the length of the string fields.
+   *@param //in1[]  array showing what the attributes of the input fields are.
+   *@param //s1_sizes[]  shows the length of the string fields.
    *@param len_in1  number of attributes in the input tuple
    *@param n_out_flds  number of fields in the out tuple
    *@param proj_list  shows what input fields go where in the output tuple
@@ -54,22 +55,22 @@ public class FileScan extends  Iterator
 		    )
     throws IOException,
 	   FileScanException,
-	   TupleUtilsException, 
+	   MapUtilsException,
 	   InvalidRelation
     {
       _in1 = in1; 
       in1_len = len_in1;
       s_sizes = s1_sizes;
       
-      Jtuple =  new Tuple();
+      Jtuple =  new Map();
       AttrType[] Jtypes = new AttrType[n_out_flds];
       short[]    ts_size;
-      ts_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes, in1, len_in1, s1_sizes, proj_list, n_out_flds);
+      ts_size = MapUtils.setup_op_tuple(Jtuple, Jtypes, in1, len_in1, s1_sizes, proj_list, n_out_flds);
       
       OutputFilter = outFilter;
       perm_mat = proj_list;
       nOutFlds = n_out_flds; 
-      tuple1 =  new Tuple();
+      tuple1 =  new Map();
 
       try {
 	tuple1.setHdr(in1_len, _in1, s1_sizes);
@@ -114,7 +115,7 @@ public class FileScan extends  Iterator
    *@exception FieldNumberOutOfBoundException array out of bounds
    *@exception WrongPermat exception for wrong FldSpec argument
    */
-  public Tuple get_next()
+  public Map get_next()
     throws JoinsException,
 	   IOException,
 	   InvalidTupleSizeException,
@@ -125,7 +126,7 @@ public class FileScan extends  Iterator
 	   FieldNumberOutOfBoundException,
 	   WrongPermat
     {     
-      RID rid = new RID();;
+      MID rid = new MID();;
       
       while(true) {
 	if((tuple1 =  scan.getNext(rid)) == null) {

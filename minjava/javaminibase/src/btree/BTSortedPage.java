@@ -92,12 +92,12 @@ public class BTSortedPage  extends HFPage{
    *@return its rid where the entry was inserted; null if no space left.
    *@exception  InsertRecException error when insert
    */
-   protected RID insertRecord( KeyDataEntry entry)
+   protected MID insertRecord( KeyDataEntry entry)
           throws InsertRecException 
    {
      int i;
      short  nType;
-     RID rid;
+     MID rid;
      byte[] record;
      // ASSERTIONS:
      // - the slot directory is compressed; Inserts will occur at the end
@@ -169,7 +169,7 @@ public class BTSortedPage  extends HFPage{
    *@return true if success; false if rid is invalid(no record in the rid).
    *@exception DeleteRecException error when delete
    */
-  public  boolean deleteSortedRecord(RID rid)
+  public  boolean deleteSortedRecord(MID rid)
     throws DeleteRecException
     {
       try {
@@ -189,7 +189,7 @@ public class BTSortedPage  extends HFPage{
     } // end of deleteSortedRecord
   
   /** How many records are in the page
-   *@param return the number of records.
+   *@param //return the number of records.
    *@exception IOException I/O errors
    */
   protected int numberOfRecords() 

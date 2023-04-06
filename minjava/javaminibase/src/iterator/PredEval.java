@@ -11,11 +11,11 @@ public class PredEval
    *predicate evaluate, according to the condition ConExpr, judge if 
    *the two tuple can join. if so, return true, otherwise false
    *@return true or false
-   *@param p[] single select condition array
+   *@param //p[] single select condition array
    *@param t1 compared tuple1
    *@param t2 compared tuple2
-   *@param in1[] the attribute type corespond to the t1
-   *@param in2[] the attribute type corespond to the t2
+   *@param //in1[] the attribute type corespond to the t1
+   *@param //in2[] the attribute type corespond to the t2
    *@exception IOException  some I/O error
    *@exception UnknowAttrType don't know the attribute type
    *@exception InvalidTupleSizeException size of tuple not valid
@@ -34,9 +34,9 @@ public class PredEval
     {
       CondExpr temp_ptr;
       int       i = 0;
-      Tuple    tuple1 = null, tuple2 = null;
+      Map    tuple1 = null, tuple2 = null;
       int      fld1, fld2;
-      Tuple    value =   new Tuple();
+      Map    value =   new Map();
       short[]     str_size = new short[1];
       AttrType[]  val_type = new AttrType[1];
       
@@ -129,7 +129,8 @@ public class PredEval
 	      
 	      // Got the arguments, now perform a comparison.
 	      try {
-		comp_res = TupleUtils.CompareTupleWithTuple(comparison_type, tuple1, fld1, tuple2, fld2);
+	      	//maputils
+		comp_res = MapUtils.CompareMapWithMap(comparison_type, tuple1, fld1, tuple2, fld2);
 	      }catch (TupleUtilsException e){
 		throw new PredEvalException (e,"TupleUtilsException is caught by PredEval.java");
 	      }

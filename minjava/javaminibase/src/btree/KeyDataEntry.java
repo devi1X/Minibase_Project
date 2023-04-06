@@ -46,14 +46,14 @@ public class KeyDataEntry {
 
   /** Class constructor.
    */
-  public KeyDataEntry( Integer key, RID rid) {
+  public KeyDataEntry( Integer key, MID rid) {
      this.key = new IntegerKey(key); 
      this.data = new LeafData(rid);
   };
 
   /** Class constructor.
    */
-  public KeyDataEntry( KeyClass key, RID rid){
+  public KeyDataEntry( KeyClass key, MID rid){
      data = new LeafData(rid); 
      if ( key instanceof IntegerKey ) 
         this.key= new IntegerKey(((IntegerKey)key).getKey());
@@ -64,7 +64,7 @@ public class KeyDataEntry {
 
   /** Class constructor.
    */
-  public KeyDataEntry( String key, RID rid) {
+  public KeyDataEntry( String key, MID rid) {
      this.key = new StringKey(key); 
      this.data = new LeafData(rid);
   }; 
@@ -101,8 +101,8 @@ public class KeyDataEntry {
          st2= ( (IndexData)data).getData().pid==
               ((IndexData)entry.data).getData().pid ;
       else
-         st2= ((RID)((LeafData)data).getData()).equals
-                (((RID)((LeafData)entry.data).getData()));
+         st2= ((MID)((LeafData)data).getData()).equals
+                (((MID)((LeafData)entry.data).getData()));
 
   
       return (st1&&st2);

@@ -80,10 +80,10 @@ public class BTIndexPage extends BTSortedPage{
    null if no space left.
    *@exception IndexInsertRecException error when insert
    */
-   public RID insertKey(KeyClass key, PageId pageNo) 
+   public MID insertKey(KeyClass key, PageId pageNo)
       throws  IndexInsertRecException
     {
-      RID rid;
+      MID rid;
       KeyDataEntry entry;
       try {
         entry = new KeyDataEntry( key, pageNo); 
@@ -105,11 +105,11 @@ public class BTIndexPage extends BTSortedPage{
    * any reason
    *@return  RID of the record deleted. Can not return null.
    */
-  RID deleteKey(KeyClass key) 
+  MID deleteKey(KeyClass key)
     throws IndexFullDeleteException 
     {
       KeyDataEntry  entry;
-      RID rid=new RID(); 
+      MID rid=new MID();
       
       
       try {
@@ -190,7 +190,7 @@ public class BTIndexPage extends BTSortedPage{
    *null if NO MORE RECORD
    *@exception IteratorException  iterator error
    */
-  public KeyDataEntry getFirst(RID rid) 
+  public KeyDataEntry getFirst(MID rid)
     throws IteratorException
     {
       
@@ -226,7 +226,7 @@ public class BTIndexPage extends BTSortedPage{
    *null if no more record
    *@exception IteratorException iterator error
    */
-  public KeyDataEntry getNext (RID rid)
+  public KeyDataEntry getNext (MID rid)
     throws  IteratorException 
     {
       KeyDataEntry  entry; 
@@ -345,11 +345,11 @@ public class BTIndexPage extends BTSortedPage{
 	entry =  findKeyData( oldKey );
 	if (entry == null) return false;
 	
-	RID rid=deleteKey( entry.key );
-	if (rid==null) throw new IndexFullDeleteException(null, "Rid is null");
+	MID rid=deleteKey( entry.key );
+	if (rid==null) throw new IndexFullDeleteException(null, "MID is null");
 	
 	rid=insertKey( newKey, ((IndexData)entry.data).getData());        
-	if (rid==null) throw new IndexFullDeleteException(null, "Rid is null");
+	if (rid==null) throw new IndexFullDeleteException(null, "MID is null");
 	
 	return true;
       }
@@ -429,7 +429,7 @@ public class BTIndexPage extends BTSortedPage{
 	  }
 	  else {
             // get its sibling's first record's key 
-            RID dummyRid=new RID();
+            MID dummyRid=new MID();
             KeyDataEntry firstEntry, lastEntry;
             firstEntry=indexPage.getFirst(dummyRid);
             
@@ -451,7 +451,7 @@ public class BTIndexPage extends BTSortedPage{
             indexPage.setLeftLink(((IndexData)(lastEntry.data)).getData() );
 	    
             // delete the last record from the old page
-            RID delRid=new RID();
+            MID delRid=new MID();
             delRid.pageNo = getCurPage();
             delRid.slotNo = getSlotCnt()-1;
 
@@ -497,7 +497,7 @@ public class BTIndexPage extends BTSortedPage{
             setLeftLink(((IndexData)(firstEntry.data)).getData());
             
             // delete the first record 
-            RID delRid=new RID();
+            MID delRid=new MID();
             delRid.pageNo = getCurPage();
             delRid.slotNo = 0;
             if (deleteSortedRecord(delRid) == false )

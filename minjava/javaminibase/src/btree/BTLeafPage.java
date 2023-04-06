@@ -86,7 +86,7 @@ public class BTLeafPage extends BTSortedPage {
    *           i.e., the <key, dataRid> pair.
    *@exception  LeafInsertRecException error when insert
    */   
-  public RID insertRecord(KeyClass key, RID dataRid) 
+  public MID insertRecord(KeyClass key, MID dataRid)
     throws  LeafInsertRecException
     {
       KeyDataEntry entry;
@@ -111,7 +111,7 @@ public class BTLeafPage extends BTSortedPage {
    * null if no more record
    *@exception  IteratorException iterator error
    */
-  public KeyDataEntry getFirst(RID rid) 
+  public KeyDataEntry getFirst(MID rid)
     throws  IteratorException
     {
       
@@ -146,7 +146,7 @@ public class BTLeafPage extends BTSortedPage {
     *@exception IteratorException iterator error
     */
 
-   public KeyDataEntry getNext (RID rid)
+   public KeyDataEntry getNext (MID rid)
      throws  IteratorException
    {
      KeyDataEntry  entry; 
@@ -180,7 +180,7 @@ public class BTLeafPage extends BTSortedPage {
    *@return return the current KeyDataEntry
    *@exception  IteratorException iterator error
    */ 
-   public KeyDataEntry getCurrent (RID rid)
+   public KeyDataEntry getCurrent (MID rid)
        throws  IteratorException
    {  
      rid.slotNo--;
@@ -198,7 +198,7 @@ public class BTLeafPage extends BTSortedPage {
      throws  LeafDeleteException
     {
       KeyDataEntry  entry;
-      RID rid=new RID(); 
+      MID rid=new MID();
       
       try {
 	for(entry = getFirst(rid); entry!=null; entry=getNext(rid)) 
@@ -251,7 +251,7 @@ public class BTLeafPage extends BTSortedPage {
 	    
 	    
             //get its sibling's first record's key for adjusting parent pointer
-            RID dummyRid=new RID();
+            MID dummyRid=new MID();
             KeyDataEntry firstEntry;
             firstEntry=leafPage.getFirst(dummyRid);
 
@@ -259,7 +259,7 @@ public class BTLeafPage extends BTSortedPage {
             leafPage.insertRecord(lastEntry);
             
             // delete the last record from the old page
-            RID delRid=new RID();
+            MID delRid=new MID();
             delRid.pageNo = getCurPage();
             delRid.slotNo = getSlotCnt()-1;
             if ( deleteSortedRecord(delRid) == false )
@@ -292,12 +292,12 @@ public class BTLeafPage extends BTSortedPage {
 					    NodeType.LEAF);
 	    
             // insert it into its sibling
-            RID dummyRid=new RID();
+            MID dummyRid=new MID();
             leafPage.insertRecord(firstEntry);
             
 
             // delete the first record from the old page
-            RID delRid=new RID();
+            MID delRid=new MID();
             delRid.pageNo = getCurPage();
             delRid.slotNo = 0;
             if ( deleteSortedRecord(delRid) == false) 
