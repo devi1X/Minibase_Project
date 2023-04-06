@@ -45,7 +45,7 @@ interface  Filetype {
 public class Heapfile implements Filetype,  GlobalConst {
   
   
-  PageId      _firstDirPageId;   // page number of header page
+  public PageId      _firstDirPageId;   // page number of header page
   int         _ftype;
   private     boolean     _file_deleted;
   private     String 	 _fileName;
@@ -56,7 +56,7 @@ public class Heapfile implements Filetype,  GlobalConst {
   /* get a new datapage from the buffer manager and initialize dpinfo
      @param dpinfop the information in the new HFPage
   */
-  private HFPage _newDatapage(DataPageInfo dpinfop)
+  public HFPage _newDatapage(DataPageInfo dpinfop)
     throws HFException,
 	   HFBufMgrException,
 	   HFDiskMgrException,
@@ -87,7 +87,7 @@ public class Heapfile implements Filetype,  GlobalConst {
      user record(rid) and true if record is found.
      If the user record cannot be found, return false.
   */
-  private boolean  _findDataPage( MID rid,
+  public boolean  _findDataPage( MID rid,
 				  PageId dirPageId, HFPage dirpage,
 				  PageId dataPageId, HFPage datapage,
 				  MID rpDataPageRid)

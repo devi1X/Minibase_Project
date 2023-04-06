@@ -1,4 +1,5 @@
 # modify the paths appropriately
+#JDKPATH = /usr/java/jdk1.3.1_02
 JDKPATH = /Library/Java/JavaVirtualMachines/jdk-13.0.1.jdk/Contents/Home
 LIBPATH = .:..
 CLASSPATH = $(LIBPATH)
@@ -22,7 +23,7 @@ DBTest:DBTest.java
 dbtest: DBTest
 	$(JAVA) tests.DBTest
 
-# test heapfile 
+# test heapfile
 
 HFTest:HFTest.java
 	$(JAVAC) TestDriver.java HFTest.java
@@ -71,5 +72,11 @@ sortmerge: SMJoin
 	$(JAVA) tests.SM_JoinTest
 
 
+batch:BatchInsert.java
+	$(JAVAC) BatchInsert.java
 
+# project2_main_func:project2_main_func.java
+# 	$(JAVAC) project2_main_func.java
 
+project2_main_func: project2_main_func
+	$(JAVA) tests.project2_main_func

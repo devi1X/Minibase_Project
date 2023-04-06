@@ -15,6 +15,7 @@ public class Map implements GlobalConst {
 
     public static final short NUM_FIELDS = 4;
     public static final int MAX_SIZE = MINIBASE_PAGESIZE;
+    public static final int DEFAULT_STRING_ATTRIBUTE_SIZE = 20;
     private static final short ROW_NUMBER = 1;
     private static final short COLUMN_NUMBER = 2;
     private static final short TIMESTAMP_NUMBER = 3;
@@ -379,6 +380,25 @@ public class Map implements GlobalConst {
             return val;
         } else
             throw new FieldNumberOutOfBoundException(null, "Map:Map_FLDNO_OUT_OF_BOUND");
+    }
+
+    public AttrType[] getAttrType(){
+        AttrType[] mapAttrtypes = new AttrType[4];
+        mapAttrtypes[0] = new AttrType (AttrType.attrString);
+        mapAttrtypes[1] = new AttrType (AttrType.attrString);
+        mapAttrtypes[2] = new AttrType (AttrType.attrInteger);
+        mapAttrtypes[3] = new AttrType (AttrType.attrString);
+
+        return mapAttrtypes;
+    }
+    public short[] getMapSizes(){
+        //bigt temp = new bigt();
+        short[] mapSizes = new short[3];
+        mapSizes[0] = 30;
+        mapSizes[1] = 30;
+        mapSizes[2] = 30;
+
+        return mapSizes;
     }
 
 

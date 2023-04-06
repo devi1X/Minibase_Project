@@ -131,7 +131,7 @@ public class PredEval
 	      try {
 	      	//maputils
 		comp_res = MapUtils.CompareMapWithMap(comparison_type, tuple1, fld1, tuple2, fld2);
-	      }catch (TupleUtilsException e){
+	      }catch (MapUtilsException e){
 		throw new PredEvalException (e,"TupleUtilsException is caught by PredEval.java");
 	      }
 	      op_res = false;

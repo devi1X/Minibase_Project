@@ -8,6 +8,7 @@ package catalog;
 
 import java.io.*;
 
+import bigT.Map;
 import global.*;
 import heap.*;
 import bufmgr.*;
@@ -27,7 +28,7 @@ public class IndexCatalog extends Heapfile
     {
       super(filename);
       
-      tuple = new Tuple(Tuple.max_size);
+      tuple = new Map(Map.MAX_SIZE);
       attrs = new AttrType[7];
       
       attrs[0] = new AttrType(AttrType.attrString);
@@ -74,7 +75,7 @@ public class IndexCatalog extends Heapfile
       RelDesc record = null;
       int status;
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null;
       int count = 0;
       
@@ -161,7 +162,7 @@ public class IndexCatalog extends Heapfile
 	   Exception
     {
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null; 
       
       if ((relation == null)||(attrName == null))
@@ -218,7 +219,7 @@ public class IndexCatalog extends Heapfile
       AttrDesc record = null;
       int status;
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null;
       int count = 0;
       
@@ -331,7 +332,7 @@ public class IndexCatalog extends Heapfile
     throws IOException,
 	   IndexCatalogException
     {
-      RID rid;
+      MID rid;
       
       try {
 	make_tuple(tuple, record);
@@ -341,7 +342,7 @@ public class IndexCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertRecord(tuple.getMapByteArray());
       }
       catch (Exception e) {
 	throw new IndexCatalogException(e, "insertRecord() failed");
@@ -357,7 +358,7 @@ public class IndexCatalog extends Heapfile
 	   IndexCatalogException
     {
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null;
       IndexDesc record = null;
       
@@ -418,7 +419,7 @@ public class IndexCatalog extends Heapfile
 	   IndexCatalogException,
 	   java.lang.Exception
     {
-      RID    	rid = null;
+      MID    	rid = null;
       IndexDesc indexRec = null;
       AttrDesc  attrRec = null;
       int   	intKey = 0;
@@ -430,7 +431,7 @@ public class IndexCatalog extends Heapfile
       
       Heapfile datafile = null;
       String	indexName = null;
-      Tuple 	tuple = null;
+      Map 	tuple = null;
       BTreeFile btree = null;
       Scan 	pscan = null;
       AttrType [] typeArray = null;
@@ -559,7 +560,7 @@ public class IndexCatalog extends Heapfile
 	throw new IndexCatalogException(e,"getTupleStructure");
       }
       
-      tuple = new Tuple(Tuple.max_size);
+      tuple = new Map(Map.MAX_SIZE);
       if (tuple == null)
 	throw new Catalognomem(null, "Catalog, No Enough Memory!");
       
@@ -625,7 +626,7 @@ public class IndexCatalog extends Heapfile
   void dropRelation(String relation){};
   
   
-  void make_tuple(Tuple tuple, IndexDesc record)
+  void make_tuple(Map tuple, IndexDesc record)
     throws IOException,
 	   IndexCatalogException
     {
@@ -666,7 +667,7 @@ public class IndexCatalog extends Heapfile
       return;
     };
   
-  void read_tuple(Tuple tuple, IndexDesc record)
+  void read_tuple(Map tuple, IndexDesc record)
     throws IOException,
 	   IndexCatalogException
     {
@@ -712,7 +713,7 @@ public class IndexCatalog extends Heapfile
     };
   
   
-  Tuple tuple;
+  Map tuple;
   short [] str_sizes;
   AttrType [] attrs;
   

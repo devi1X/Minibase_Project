@@ -277,7 +277,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	      // Note that depending on whether the sort order
 	      // is ascending or descending,
 	      // this loop will be modified.
-	      comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
+	      comp_res = MapUtils.CompareMapWithMap(sortFldType, tuple1,
 							  jc_in1, tuple2, jc_in2);
 	      while ((comp_res < 0 && _order.tupleOrder == TupleOrder.Ascending) ||
 		     (comp_res > 0 && _order.tupleOrder == TupleOrder.Descending))
@@ -287,11 +287,11 @@ public class SortMerge extends Iterator implements GlobalConst
 		    return null;
 		  }
 		  
-		  comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
+		  comp_res = MapUtils.CompareMapWithMap(sortFldType, tuple1,
 							      jc_in1, tuple2, jc_in2);
 		}
 	      
-	      comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
+	      comp_res = MapUtils.CompareMapWithMap(sortFldType, tuple1,
 							  jc_in1, tuple2, jc_in2);
 	      while ((comp_res > 0 && _order.tupleOrder == TupleOrder.Ascending) ||
 		     (comp_res < 0 && _order.tupleOrder == TupleOrder.Descending))
@@ -302,7 +302,7 @@ public class SortMerge extends Iterator implements GlobalConst
 		      return null;
 		    }
 		  
-		  comp_res = MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
+		  comp_res = MapUtils.CompareMapWithMap(sortFldType, tuple1,
 							      jc_in1, tuple2, jc_in2);
 		}
 	      
@@ -318,7 +318,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	      io_buf1.init(_bufs1,       1, t1_size, temp_file_fd1);
 	      io_buf2.init(_bufs2,       1, t2_size, temp_file_fd2);
 	      
-	      while (MapUtils.CompareTupleWithTuple(sortFldType, tuple1,
+	      while (MapUtils.CompareMapWithMap(sortFldType, tuple1,
 						      jc_in1, TempTuple1, jc_in1) == 0)
 		{
 		  // Insert tuple1 into io_buf1
@@ -335,7 +335,7 @@ public class SortMerge extends Iterator implements GlobalConst
 		    }
 		}
 	      
-	      while (MapUtils.CompareTupleWithTuple(sortFldType, tuple2,
+	      while (MapUtils.CompareMapWithMap(sortFldType, tuple2,
 						      jc_in2, TempTuple2, jc_in2) == 0)
 		{
 		  // Insert tuple2 into io_buf2

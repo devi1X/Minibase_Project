@@ -7,6 +7,8 @@
 package catalog;
 
 import java.io.*;
+
+import bigT.Map;
 import global.*;
 import heap.*;
 import bufmgr.*;
@@ -28,7 +30,7 @@ public class AttrCatalog extends Heapfile
       
       int sizeOfInt = 4;
       int sizeOfFloat = 4;
-      tuple = new Tuple(Tuple.max_size);
+      tuple = new Map(Map.MAX_SIZE);
       attrs = new AttrType[9];
       
       attrs[0] = new AttrType(AttrType.attrString);
@@ -77,7 +79,7 @@ public class AttrCatalog extends Heapfile
 	   Catalogattrnotfound
     {
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null; 
       
       
@@ -130,7 +132,7 @@ public class AttrCatalog extends Heapfile
       AttrDesc attrRec = null;
       int status;
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null;
       int count = 0;
       
@@ -302,7 +304,7 @@ public class AttrCatalog extends Heapfile
     throws AttrCatalogException, 
 	   IOException
     {
-      RID rid;
+      MID rid;
       
       try {
 	make_tuple(tuple, record);
@@ -312,7 +314,7 @@ public class AttrCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertRecord(tuple.getMapByteArray());
       }
       catch (Exception e2) {
 	throw new AttrCatalogException(e2, "insertRecord failed");
@@ -330,7 +332,7 @@ public class AttrCatalog extends Heapfile
 	   
     {
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null;
       AttrDesc record = null;
       
@@ -381,7 +383,7 @@ public class AttrCatalog extends Heapfile
   // Tuple must have been initialized properly in the 
   // constructor
   // Converts AttrDesc to tuple. 
-  public void make_tuple(Tuple tuple, AttrDesc record)
+  public void make_tuple(Map tuple, AttrDesc record)
     throws IOException, 
 	   AttrCatalogException
     {
@@ -419,7 +421,7 @@ public class AttrCatalog extends Heapfile
   // READ_TUPLE
   //--------------------------------------------------
   
-  public void read_tuple(Tuple tuple, AttrDesc record)
+  public void read_tuple(Map tuple, AttrDesc record)
     throws IOException, 
 	   AttrCatalogException
     {
@@ -473,7 +475,7 @@ public class AttrCatalog extends Heapfile
 		       IndexType accessType){};
   
   
-  Tuple tuple;
+  Map tuple;
   short [] str_sizes;
   AttrType [] attrs;
   short max;

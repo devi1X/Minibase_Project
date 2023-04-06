@@ -7,6 +7,8 @@
 package catalog;
 
 import java.io.*;
+
+import bigT.Map;
 import bufmgr.*;
 import global.*;
 import heap.*;
@@ -27,7 +29,7 @@ public class RelCatalog extends Heapfile
     {
         super(filename);
       
-      tuple = new Tuple(Tuple.max_size);
+      tuple = new Map(Map.MAX_SIZE);
       
       attrs = new AttrType[5];
       attrs[0] = new AttrType(AttrType.attrString);
@@ -59,7 +61,7 @@ public class RelCatalog extends Heapfile
 	   Catalogrelnotfound
     {
       int recSize;
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null;
       
       if (relation == null)
@@ -288,7 +290,7 @@ public class RelCatalog extends Heapfile
     throws RelCatalogException, 
 	   IOException
     {
-      RID rid;
+      MID rid;
       
       try {
 	make_tuple(tuple, record);
@@ -299,7 +301,7 @@ public class RelCatalog extends Heapfile
       }
       
       try {
-	insertRecord(tuple.getTupleByteArray());
+	insertRecord(tuple.getMapByteArray());
       }
       catch (Exception e2) {
 	System.err.println ("insertRecord"+e2);
@@ -314,7 +316,7 @@ public class RelCatalog extends Heapfile
 	   Catalogmissparam,
 	   Catalogattrnotfound
     {
-      RID rid = null;
+      MID rid = null;
       Scan pscan = null;
       int recSize;
       RelDesc record = null;
@@ -357,7 +359,7 @@ public class RelCatalog extends Heapfile
     };
   
   // Converts AttrDesc to tuple.
-  public void make_tuple(Tuple tuple, RelDesc record)
+  public void make_tuple(Map tuple, RelDesc record)
     throws IOException, 
 	   RelCatalogException
     {
@@ -375,7 +377,7 @@ public class RelCatalog extends Heapfile
       
     };
   
-  public void read_tuple(Tuple tuple, RelDesc record)
+  public void read_tuple(Map tuple, RelDesc record)
     throws IOException, 
 	   RelCatalogException
     {
@@ -424,7 +426,7 @@ public class RelCatalog extends Heapfile
   //                    int indexCnt, int attrsize){};
   
   
-  Tuple tuple;
+  Map tuple;
   short [] str_sizes;
   AttrType [] attrs;
   

@@ -52,7 +52,7 @@ public abstract class pnodePQ
    * @exception TupleUtilsException error in tuple compare routines
    */
   abstract public void  enq(pnode  item) 
-           throws IOException, UnknowAttrType, TupleUtilsException;      
+           throws IOException, UnknowAttrType, TupleUtilsException, MapUtilsException;
 
   /**
    * removes the minimum (Ascending) or maximum (Descending) element
@@ -74,9 +74,9 @@ public abstract class pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */
-  public int pnodeCMP(pnode a, pnode b) 
-         throws IOException, UnknowAttrType, MapUtilsException {
-    int ans = MapUtils.CompareTupleWithTuple(fld_type, a.tuple, fld_no, b.tuple, fld_no);
+  public int pnodeCMP(pnode a, pnode b)
+          throws IOException, UnknowAttrType, MapUtilsException, TupleUtilsException {
+    int ans = MapUtils.CompareMapWithMap(fld_type, a.tuple, fld_no, b.tuple, fld_no);
     return ans;
   }
 
@@ -91,7 +91,7 @@ public abstract class pnodePQ
    *                           <code>attrNull</code> encountered
    * @exception TupleUtilsException error in tuple compare routines
    */  
-  public boolean pnodeEQ(pnode a, pnode b) throws IOException, UnknowAttrType, MapUtilsException {
+  public boolean pnodeEQ(pnode a, pnode b) throws IOException, UnknowAttrType, MapUtilsException, TupleUtilsException {
     return pnodeCMP(a, b) == 0;
   }
   

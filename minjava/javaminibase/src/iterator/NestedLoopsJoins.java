@@ -1,6 +1,7 @@
 package iterator;
    
 
+import bigT.Map;
 import heap.*;
 import global.*;
 import bufmgr.*;
@@ -30,8 +31,8 @@ public class NestedLoopsJoins  extends Iterator
   private   int        n_buf_pgs;        // # of buffer pages available.
   private   boolean        done,         // Is the join complete
     get_from_outer;                 // if TRUE, a tuple is got from outer
-  private   Tuple     outer_tuple, inner_tuple;
-  private   Tuple     Jtuple;           // Joined tuple
+  private  Map outer_tuple, inner_tuple;
+  private   Map     Jtuple;           // Joined tuple
   private   FldSpec   perm_mat[];
   private   int        nOutFlds;
   private   Heapfile  hf;
@@ -82,8 +83,8 @@ public class NestedLoopsJoins  extends Iterator
       
       outer = am1;
       t2_str_sizescopy =  t2_str_sizes;
-      inner_tuple = new Tuple();
-      Jtuple = new Tuple();
+      inner_tuple = new Map();
+      Jtuple = new Map();
       OutputFilter = outFilter;
       RightFilter  = rightFilter;
       
@@ -98,11 +99,11 @@ public class NestedLoopsJoins  extends Iterator
       perm_mat = proj_list;
       nOutFlds = n_out_flds;
       try {
-	t_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes,
+	t_size = MapUtils.setup_op_tuple(Jtuple, Jtypes,
 					   in1, len_in1, in2, len_in2,
 					   t1_str_sizes, t2_str_sizes,
 					   proj_list, nOutFlds);
-      }catch (TupleUtilsException e){
+      }catch ( MapUtilsException e){
 	throw new NestedLoopException(e,"TupleUtilsException is caught by NestedLoopsJoins.java");
       }
       
@@ -134,7 +135,7 @@ public class NestedLoopsJoins  extends Iterator
    *@exception Exception other exceptions
 
    */
-  public Tuple get_next()
+  public Map get_next()
     throws IOException,
 	   JoinsException ,
 	   IndexException,
@@ -197,7 +198,7 @@ public class NestedLoopsJoins  extends Iterator
 	  // is no match (with pred),get a tuple from the inner.
 	  
 	 
-	      RID rid = new RID();
+	      MID rid = new MID();
 	      while ((inner_tuple = inner.getNext(rid)) != null)
 		{
 		  inner_tuple.setHdr((short)in2_len, _in2,t2_str_sizescopy);
