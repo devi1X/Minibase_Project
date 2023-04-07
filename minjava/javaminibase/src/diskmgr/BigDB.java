@@ -3,10 +3,10 @@
 package diskmgr;
 
 import java.io.*;
-import bufmgr.*;
+
 import global.*;
 
-public class DB implements GlobalConst {
+public class BigDB implements GlobalConst {
 
   
   private static final int bits_per_page = MAX_SPACE * 8;
@@ -14,7 +14,7 @@ public class DB implements GlobalConst {
   
   /** Open the database with the given name.
    *
-   * @param name DB_name
+   * @param fname DB_name
    *
    * @exception IOException I/O errors
    * @exception FileIOException file I/O error
@@ -50,15 +50,15 @@ public class DB implements GlobalConst {
   
   /** default constructor.
    */
-  public DB() { }
+  public BigDB() { }
   
   
   /** DB Constructors.
    * Create a database with the specified number of pages where the page
    * size is the default page size.
    *
-   * @param name DB name
-   * @param num_pages number of pages in DB
+   * @param fname DB name
+   * @param num_pgs number of pages in DB
    *
    * @exception IOException I/O errors
    * @exception InvalidPageNumberException invalid page number
@@ -71,8 +71,8 @@ public class DB implements GlobalConst {
 	   FileIOException,
 	   DiskMgrException {
     
-    name = new String(fname);
-    num_pages = (num_pgs > 2) ? num_pgs : 2;
+    name = fname;
+    num_pages = Math.max(num_pgs, 2);
     
     File DBfile = new File(name);
     
@@ -82,7 +82,7 @@ public class DB implements GlobalConst {
     fp = new RandomAccessFile(fname, "rw");
     
     // Make the file num_pages pages long, filled with zeroes.
-    fp.seek((long)(num_pages*MINIBASE_PAGESIZE-1));
+    fp.seek((long) num_pages *MINIBASE_PAGESIZE-1);
     fp.writeByte(0);
     
     // Initialize space map and directory pages.
@@ -143,12 +143,14 @@ public class DB implements GlobalConst {
       throw new InvalidPageNumberException(null, "BAD_PAGE_NUMBER");
     
     // Seek to the correct page
-    fp.seek((long)(pageno.pid *MINIBASE_PAGESIZE));
+    fp.seek((long) pageno.pid *MINIBASE_PAGESIZE);
     
     // Read the appropriate number of bytes.
     byte [] buffer = apage.getpage();  //new byte[MINIBASE_PAGESIZE];
     try{
       fp.read(buffer);
+//      pCounter increment
+      pcounter.readIncrement();
     }
     catch (IOException e) {
       throw new FileIOException(e, "DB file I/O error");
@@ -174,11 +176,14 @@ public class DB implements GlobalConst {
       throw new InvalidPageNumberException(null, "INVALID_PAGE_NUMBER");
     
     // Seek to the correct page
-    fp.seek((long)(pageno.pid *MINIBASE_PAGESIZE));
+    fp.seek((long) pageno.pid *MINIBASE_PAGESIZE);
     
     // Write the appropriate number of bytes.
     try{
       fp.write(apage.getpage());
+//      pCounter increment
+
+        pcounter.writeIncrement();
     }
     catch (IOException e) {
       throw new FileIOException(e, "DB file I/O error");
@@ -212,7 +217,7 @@ public class DB implements GlobalConst {
   /** user specified run_size
    *
    * @param start_page_num the starting page id of the run of pages
-   * @param run_size the number of page need allocated
+   * @param runsize the number of page need allocated
    *
    * @exception OutOfSpaceException No space left
    * @exception InvalidRunSizeException invalid run size 
@@ -261,16 +266,15 @@ public class DB implements GlobalConst {
       // Walk the page looking for a sequence of 0 bits of the appropriate
       // length.  The outer loop steps through the page's bytes, the inner
       // one steps through each byte's bits.
-      
-      for(; num_bits_this_page>0 
+    for(; num_bits_this_page>0
 	    && current_run_length < run_size; ++byteptr) {// start forloop02
 	  
 	
-	Integer intmask = new Integer(1);
-	Byte mask = new Byte(intmask.byteValue());
-	byte tmpmask = mask.byteValue();
+	int intmask = 1;
+	byte mask = (byte) intmask;
+	byte tmpmask = mask;
 	
-	while (mask.intValue()!=0 && (num_bits_this_page>0)
+	while ((int) mask !=0 && (num_bits_this_page>0)
 	       &&(current_run_length < run_size))
 	  
 	  {	      
@@ -283,7 +287,7 @@ public class DB implements GlobalConst {
 	    
 	    
 	    tmpmask <<=1;
-	    mask = new Byte(tmpmask);
+	    mask = tmpmask;
 	    --num_bits_this_page;
 	  }
 	
@@ -334,7 +338,6 @@ public class DB implements GlobalConst {
    *  with run size = 1
    *
    * @param start_page_num the start pageId to be deallocate
-   * @param run_size the number of pages to be deallocated
    *
    * @exception InvalidRunSizeException invalid run size 
    * @exception InvalidPageNumberException invalid page number
@@ -778,22 +781,21 @@ public class DB implements GlobalConst {
             int imask =1;
 	    int temp;
 	    imask = ((imask << num_bits_this_byte) -1)<<first_bit_offset;
-	    Integer intmask = new Integer(imask);
-	    Byte mask = new Byte(intmask.byteValue());
-	    byte bytemask = mask.byteValue();
+	    int intmask = imask;
+          byte bytemask = (byte) intmask;
 	    
 	    if(bit==1)
 	      {
 	        temp = (pgbuf[cur_posi] | bytemask);
-	        intmask = new Integer(temp);
-		pgbuf[cur_posi] = intmask.byteValue();
+	        intmask = temp;
+		pgbuf[cur_posi] = (byte) intmask;
 	      }
 	    else
 	      {
 		
 		temp = pgbuf[cur_posi] & (255^bytemask);
-	        intmask = new Integer(temp);
-		pgbuf[cur_posi] = intmask.byteValue();
+	        intmask = temp;
+		pgbuf[cur_posi] = (byte) intmask;
 	      }
 	    run_size -= num_bits_this_byte;
 	    
@@ -941,7 +943,7 @@ class DBHeaderPage implements PageUsedBytes, GlobalConst {
   /**
    * initialize file entries as empty
    * @param empty invalid page number (=-1)
-   * @param entryno file entry number
+   * @param entryNo file entry number
    * @exception IOException I/O errors
    */
   private void initFileEntry(int empty, int entryNo)
@@ -952,9 +954,9 @@ class DBHeaderPage implements PageUsedBytes, GlobalConst {
   
   /**
    * set file entry
-   * @param pageno page ID
+   * @param pageNo page ID
    * @param fname the file name
-   * @param entryno file entry number
+   * @param entryNo file entry number
    * @exception IOException I/O errors
    */  
   public  void setFileEntry(PageId pageNo, String fname, int entryNo)
@@ -967,7 +969,7 @@ class DBHeaderPage implements PageUsedBytes, GlobalConst {
   
   /**
    * return file entry info
-   * @param pageno page Id
+   * @param pageNo page Id
    * @param entryNo the file entry number
    * @return file name
    * @exception IOException I/O errors
@@ -1051,7 +1053,7 @@ class DBDirectoryPage extends DBHeaderPage  { //implements PageUsedBytes
   /**
    * Constructor of DBDirectoryPage class
    * @param page a page of Page object
-   * @exception IOException
+   * @exception IOException I/O errors
    */
   public DBDirectoryPage(Page page)
     throws IOException
