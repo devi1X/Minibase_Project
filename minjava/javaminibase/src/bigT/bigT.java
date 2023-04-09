@@ -21,29 +21,42 @@ public class bigT{
 
     public PageId _firstDirPageId;
     String tableName;
-    int orderType;
+//    orderType not needed in phase 3 - Meng
+//    int orderType;
     //Stream stream;
     Heapfile heapfile;
+
+    private ArrayList<Heapfile> heapFiles;
 
     HashMap<String, ArrayList<MID>> tempMap;
 
     //这里需求理解错了，"between1 and 5 and the different types will correspond to different clustering and indexing strategies you
     //will use for the bigtable." Type也是index/Cluster类型 Let me do it.
-    public bigT(java.lang.String name, int type) throws IOException, HFException, HFBufMgrException, HFDiskMgrException {
+    public bigT(java.lang.String name) throws IOException, HFException, HFBufMgrException, HFDiskMgrException {
 
         tableName = name;
-        orderType = type;
-        heapfile = new Heapfile(name);
+//        orderType = type;
+//        heapfile = new Heapfile(name);
+//        initialize 5 heapfiles, each with the name of i (0,1,2,3,4)
+        heapFiles = new ArrayList<Heapfile>();
+        for (int i = 0; i < 5; i++) {
+            heapFiles.add(new Heapfile(Integer.toString(i)));
+        }
     }
     //complete
     public void deleteBigt() throws IOException, HFException, HFBufMgrException, HFDiskMgrException, InvalidSlotNumberException, InvalidTupleSizeException, FileAlreadyDeletedException, InvalidMapSizeException {
-        this.heapfile.deleteFile();
+        for (int i = 0; i < 5; i++) {
+            this.heapFiles.get(i).deleteFile();
+        }
 
     }
     //complete
     public int getMapCnt() throws HFBufMgrException, IOException, HFDiskMgrException, InvalidSlotNumberException, InvalidTupleSizeException, InvalidMapSizeException {
 
-        int total_Map = this.heapfile.getRecCnt();
+        int total_Map = 0;
+        for (int i = 0; i < 5; i++) {
+            total_Map += this.heapFiles.get(i).getRecCnt();
+        }
         return total_Map;
 
     }
@@ -63,13 +76,21 @@ public class bigT{
         return colCnt.size();
 
     }
-    //complete
+    //This can be deleted once the Sailor part is removed? - Meng
     public MID insertMap(byte[] mapPtr) throws Exception {
         //removeOldMap(mapPtr, heapfile);
 
         MID mid = this.heapfile.insertRecord(mapPtr);
         MID resultMID = new MID(mid.pageNo, mid.slotNo);
         return resultMID;
+    }
+
+//    New constructor that takes map and storage type. Need to implement the limit 3 records function - Meng
+    public MID insertMap(Map map, int type) throws Exception {
+        byte[] mapPtr = map.getMapByteArray();
+        Heapfile hf = heapFiles.get(type);
+        MID mid = hf.insertRecord(mapPtr);
+        return mid;
     }
 
     //complete
@@ -81,9 +102,9 @@ public class bigT{
         return this.tableName;
     }
 
-    public int getBigtType() {
-        return this.orderType;
-    }
+//    public int getBigtType() {
+//        return this.orderType;
+//    }
 
 
 //    public static void removeOldMap(byte[] mapPtr, Heapfile heapfile) throws Exception {
