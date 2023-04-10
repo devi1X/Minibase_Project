@@ -252,7 +252,7 @@ public class SortMerge extends Iterator implements GlobalConst
     {
       
       int    comp_res;
-      Map _tuple1,_tuple2;
+      Map map1, map2;
       if (done) return null;
       
       while (true)
@@ -360,13 +360,13 @@ public class SortMerge extends Iterator implements GlobalConst
 	      // Another optimization that can be made is to choose the inner and outer
 	      // by checking the number of tuples in each equivalence class.
 	      
-	      if ((_tuple1=io_buf1.Get(TempTuple1)) == null)                // Should not occur
+	      if ((map1=io_buf1.Get(TempTuple1)) == null)                // Should not occur
 		System.out.println( "Equiv. class 1 in sort-merge has no tuples");
 	    }
 	  
-	  if ((_tuple2 = io_buf2.Get(TempTuple2)) == null)
+	  if ((map2 = io_buf2.Get(TempTuple2)) == null)
 	    {
-	      if (( _tuple1= io_buf1.Get(TempTuple1)) == null)
+	      if (( map1= io_buf1.Get(TempTuple1)) == null)
 		{
 		  process_next_block = true;
 		  continue;                                // Process next equivalence class
@@ -374,7 +374,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	      else
 		{
 		  io_buf2.reread();
-		  _tuple2= io_buf2.Get( TempTuple2);
+		  map2= io_buf2.Get( TempTuple2);
 		}
 	    }
 	  if (PredEval.Eval(OutputFilter, TempTuple1, TempTuple2, _in1, _in2) == true)

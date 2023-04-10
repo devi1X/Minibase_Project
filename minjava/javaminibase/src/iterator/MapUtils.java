@@ -295,7 +295,7 @@ public class MapUtils
         try{
             temp = map.getStrFld(fldno);
         }catch (FieldNumberOutOfBoundException e){
-            throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+            throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by MapUtils.java");
         }
         return temp;
     }
