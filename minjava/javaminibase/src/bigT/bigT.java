@@ -90,11 +90,12 @@ public class bigT{
         byte[] mapPtr = map.getMapByteArray();
         Heapfile hf = heapFiles.get(type);
         MID mid = hf.insertRecord(mapPtr);
-        MID result_mid = new MID(mid.pageNo, mid.slotNo);
-
-        mids.add(result_mid);
-        //System.out.println(result_mid);
-        return result_mid;
+//        MID result_mid = new MID(mid.pageNo, mid.slotNo);
+//
+//        mids.add(result_mid);
+//        //System.out.println(result_mid);
+//        return result_mid;
+        return mid;
     }
 
     //complete

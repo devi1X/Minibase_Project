@@ -24,7 +24,7 @@ public class Batchinsert{
     private bigT bigtable;
     private BTreeFile bTreeFile;
     private BTFileScan btScan,btScan1;
-    private Map t;
+//    private Map t;
 
     private String fileName;
     private String tableName;
@@ -34,9 +34,6 @@ public class Batchinsert{
     public int insertCount = 0;
 
     public Batchinsert(){
-        //System.out.println("Please enter the fileName: ");
-        // fileName = getCommand();
-
         System.out.println("Please enter the table name: ");
         tableName = getCommand();
 
@@ -53,122 +50,33 @@ public class Batchinsert{
         tableName = bigTName;
         NUMBUF = noBuffer;
     }
-//    public void runBatchInsert() {
-////        SystemDef stuff, copied from the Sailor test section
-//        String dbpath = "/tmp/"+System.getProperty("user.name")+".minibase.testdb";
-//        String logpath = "/tmp/"+System.getProperty("user.name")+".testlog";
-//
-//        String remove_cmd = "/bin/rm -rf ";
-//        String remove_logcmd = remove_cmd + logpath;
-//        String remove_dbcmd = remove_cmd + dbpath;
-//        String remove_joincmd = remove_cmd + dbpath;
-//
-//        try {
-//            Runtime.getRuntime().exec(remove_logcmd);
-//            Runtime.getRuntime().exec(remove_dbcmd);
-//            Runtime.getRuntime().exec(remove_joincmd);
-//        }
-//        catch (IOException e) {
-//            System.err.println (""+e);
-//        }
-//        SystemDefs sysdef = new SystemDefs(dbpath, 1000, NUMBUF, "Clock" );
-//
-////Read file by each row, convert to map and insert into corresponding heapfile
-//        File inputFile = new File(this.fileName);
-//        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
-//            bigT table = new bigT(tableName);
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//                byte[] mapPtr = line.getBytes();
-//                Map map = new Map(mapPtr, 0);
-//                //System.out.println("insert in batchinsert before");
-//                table.insertMap(map, tableType);
-//                //System.out.println("insert in batchinsert after");
-//                insertCount += 1;
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (HFDiskMgrException e) {
-//            throw new RuntimeException(e);
-//        } catch (HFException e) {
-//            throw new RuntimeException(e);
-//        } catch (HFBufMgrException e) {
-//            throw new RuntimeException(e);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
-    public bigT runInsertTest(){
+    public bigT runInsertTest() throws HFDiskMgrException, HFException, HFBufMgrException, IOException {
 
         boolean status = OK;
-        int numsailors = 17;
-        int numsailors_attrs = 4;
 
         String dbpath = "/tmp/"+System.getProperty("user.name")+".minibase.testdb";
-        String logpath = "/tmp/"+System.getProperty("user.name")+".testlog";
-
-        String remove_cmd = "/bin/rm -rf ";
-        String remove_logcmd = remove_cmd + logpath;
-        String remove_dbcmd = remove_cmd + dbpath;
-        String remove_joincmd = remove_cmd + dbpath;
-
-        try {
-            Runtime.getRuntime().exec(remove_logcmd);
-            Runtime.getRuntime().exec(remove_dbcmd);
-            Runtime.getRuntime().exec(remove_joincmd);
-        }
-        catch (IOException e) {
-            System.err.println (""+e);
-        }
-
         SystemDefs sysdef = new SystemDefs(dbpath, 1000, NUMBUF, "Clock" );
 
-        t = new Map();
-        try {
-            t.setHdr((short) 4,t.getAttrType(), t.getMapSizes());
-        }
-        catch (Exception e) {
-            System.err.println("*** error in Tuple.setHdr() ***");
-            status = FAIL;
-            e.printStackTrace();
-        }
-
-        int size = t.size();
-
-        // inserting the tuple into file "sailors"
-        MID mid;
-        bigtable = null;
-        try {
-            bigtable = new bigT(tableName);
-        }
-        catch (Exception e) {
-            System.err.println("*** error in Heapfile constructor ***");
-            status = FAIL;
-            e.printStackTrace();
-        }
-
-        t = new Map(size);
-        try {
-            t.setHdr((short) 4, t.getAttrType(), t.getMapSizes());
-        }
-        catch (Exception e) {
-            System.err.println("*** error in Map.setHdr() ***");
-            status = FAIL;
-            e.printStackTrace();
-        }
-
+        bigtable = new bigT(tableName);
         File inputFile = new File(this.fileName);
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
-            bigT table = new bigT(tableName);
             String line;
             while ((line = br.readLine()) != null) {
-                byte[] mapPtr = line.getBytes();
-                Map map = new Map(mapPtr, 0);
-                //System.out.println("insert in batchinsert before");
-                table.insertMap(map, tableType);
-                //System.out.println("insert in batchinsert after");
+                line = line.replaceAll("[^\\x00-\\x7F]", "");
+
+                String[] fields = line.split(",");
+                Map map = new Map();
+                map.setDefaultHdr();
+                String rl = fields[0];
+                String cl = fields[1];
+                int ts = Integer.parseInt(fields[2]);
+                String val = fields[3];
+                map.setRowLabel(rl);
+                map.setColumnLabel(cl);
+                map.setTimeStamp(ts);
+                map.setValue(val);
+                bigtable.insertMap(map, tableType);
                 insertCount += 1;
             }
 
@@ -183,36 +91,6 @@ public class Batchinsert{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-//        for (int i=0; i<numsailors; i++) {
-//            try {
-//                t.setStrFld(1, ((Sailor)sailors.elementAt(i)).sid);
-//                t.setStrFld(2, ((Sailor)sailors.elementAt(i)).sname);
-//                t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
-//                t.setStrFld(4, ((Sailor)sailors.elementAt(i)).age);
-//            }
-//            catch (Exception e) {
-//                System.err.println("*** bigt error in Map.setStrFld() ***");
-//                status = FAIL;
-//                e.printStackTrace();
-//            }
-//
-////            try {
-////                System.out.println(t.getMapSizes());
-////                mid = bigtable.insertMap(t.returnMapByteArray());
-////                System.out.println(mid);
-////                String columLable = t.getColumnLabel();
-////                System.out.println("Column " + i + " Label: " + columLable);
-////            }
-////            catch (Exception e) {
-////                System.err.println("*** error in map.insertMap() ***");
-////                status = FAIL;
-////                e.printStackTrace();
-////            }
-//
-//
-//
-//
-//        }
         if (status != OK) {
             //bail out
             System.err.println ("*** Error creating relation for sailors");

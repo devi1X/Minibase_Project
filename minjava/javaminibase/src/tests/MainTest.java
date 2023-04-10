@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class MainTest {
-    public static void main(String[] args) throws HFDiskMgrException, InvalidTupleSizeException, InvalidMapSizeException, IOException, InvalidSlotNumberException, HFBufMgrException {
+    public static void main(String[] args) throws HFDiskMgrException, InvalidTupleSizeException, InvalidMapSizeException, IOException, InvalidSlotNumberException, HFBufMgrException, HFException {
         bigT bigTable = null;
         int choice = Menu();
         while (choice != 3){
