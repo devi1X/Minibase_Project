@@ -65,7 +65,7 @@ public class FileScan extends  Iterator
       Jtuple =  new Map();
       AttrType[] Jtypes = new AttrType[n_out_flds];
       short[]    ts_size;
-      ts_size = MapUtils.setup_op_tuple(Jtuple, Jtypes, in1, len_in1, s1_sizes, proj_list, n_out_flds);
+      ts_size = MapUtils.setup_op_map(Jtuple, Jtypes, in1, len_in1, s1_sizes, proj_list, n_out_flds);
       
       OutputFilter = outFilter;
       perm_mat = proj_list;

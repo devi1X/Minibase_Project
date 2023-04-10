@@ -7,23 +7,166 @@ import global.*;
 import java.io.*;
 import java.lang.*;
 
-/**
- *some useful method when processing Tuple
- */
+
 public class MapUtils
 {
+    
+    public static int CompareMapWithMap(int ORDERTYPE, Map t1, int t1_fld_no,
+                                        Map t2, int t2_fld_no)
+            throws IOException,
+            UnknowAttrType,
+            MapUtilsException
+    {
+        int resCompare = -2;
+
+        if (ORDERTYPE == 1) // Compare row label, column label, timestamp
+    {
+        resCompare = rowCompare(t1, t2);
+        if (resCompare == 0)
+        {
+            resCompare = columnCompare(t1, t2);
+            if (resCompare == 0)
+            {
+                resCompare = compareTimeStamp(t1, t2);
+            }
+        }
+    }
+    else if (ORDERTYPE == 2) // Compare column label, row label, timestamp
+    {
+        resCompare = columnCompare(t1, t2);
+        if (resCompare == 0)
+        {
+            resCompare = rowCompare(t1, t2);
+            if (resCompare == 0)
+            {
+                resCompare = compareTimeStamp(t1, t2);
+            }
+        }
+    }
+    else if (ORDERTYPE == 3) // Compare row label and timestamp
+    {
+        resCompare = rowCompare(t1, t2);
+        if (resCompare == 0)
+        {
+            resCompare = compareTimeStamp(t1, t2);
+        }
+    }
+    else if (ORDERTYPE == 4) // Compare column label and timestamp
+    {
+        resCompare = columnCompare(t1, t2);
+        if (resCompare == 0)
+        {
+            resCompare = compareTimeStamp(t1, t2);
+        }
+    }
+    else if (ORDERTYPE == 5) // Only compare timestamp
+    {
+        resCompare = compareTimeStamp(t1, t2);
+    }
+    else // default
+    {
+        return resCompare;
+    }
+
+    return resCompare;
+}
+    private static int rowCompare(Map t1, Map t2)
+    {
+        String t1_f = "";
+        String t2_f = "";
+
+        try 
+        { 
+            t1_f = t1.getRowLabel(); // Get row label of t1
+            t2_f = t2.getRowLabel(); // Get row label of t2
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception: " + e);
+            return -2;
+        }
+
+        // Compare row labels and return result
+        int result = t1_f.compareTo(t2_f);
+
+        if (result < 0) {
+            return -1;
+        } else if (result > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
+    private static int columnCompare(Map t1, Map t2)
+    {
+        String t1_f = "";
+        String t2_f = "";
+
+        try 
+        { 
+            t1_f = t1.getColumnLabel(); // Get column label of t1
+            t2_f = t2.getColumnLabel(); // Get column label of t2
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception: " + e);
+            return -2;
+        }
+
+        // Compare column labels and return result
+        int result = t1_f.compareTo(t2_f);
+
+        if (result < 0) {
+            return -1;
+        } else if (result > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private static int compareTimeStamp(Map t1, Map t2)
+    {
+        int t1_f = 0;
+        int t2_f = 0;
+
+        try 
+        { 
+            t1_f = t1.getTimeStamp(); // Get timestamp of t1
+            t2_f = t2.getTimeStamp(); // Get timestamp of t2
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception: " + e);
+            return -2;
+        }
+
+        // Compare timestamps and return result
+        int result = t1_f - t2_f;
+
+        if (result < 0) {
+            return -1;
+        } else if (result > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
 
     /**
-     * This function compares a tuple with another tuple in respective field, and
+     * This function compares a map with another map in respective field, and
      *  returns:
      *
      *    0        if the two are equal,
-     *    1        if the tuple is greater,
+     *    1        if the map is greater,
      *   -1        if the tuple is smaller,
      *
      *@param    fldType   the type of the field being compared.
-     *@param    t1        one tuple.
-     *@param    t2        another tuple.
+     *@param    t1        one map.
+     *@param    t2        another map.
      *@param    t1_fld_no the field numbers in the tuples to be compared.
      *@param    t2_fld_no the field numbers in the tuples to be compared.
      *@exception UnknowAttrType don't know the attribute type
@@ -104,7 +247,7 @@ public class MapUtils
      *@exception IOException some I/O fault
      *@exception TupleUtilsException exception from this class
      */
-    public static int CompareTupleWithValue(AttrType fldType,
+    public static int CompareMapWithValue(AttrType fldType,
                                             Map  t1, int t1_fld_no,
                                             Map  value)
             throws IOException,
@@ -138,19 +281,19 @@ public class MapUtils
 
     /**
      *get the string specified by the field number
-     *@param tuple the tuple
+     *@param map the tuple
      *@param //fidno the field number
      *@return the content of the field number
      *@exception IOException some I/O fault
      *@exception TupleUtilsException exception from this class
      */
-    public static String Value(Map  tuple, int fldno)
+    public static String Value(Map  map, int fldno)
             throws IOException,
             MapUtilsException
     {
         String temp;
         try{
-            temp = tuple.getStrFld(fldno);
+            temp = map.getStrFld(fldno);
         }catch (FieldNumberOutOfBoundException e){
             throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
         }
@@ -161,14 +304,14 @@ public class MapUtils
     /**
      *set up a tuple in specified field from a tuple
      *@param value the tuple to be set
-     *@param tuple the given tuple
+     *@param map the given tuple
      *@param fld_no the field number
      *@param fldType the tuple attr type
      *@exception UnknowAttrType don't know the attribute type
      *@exception IOException some I/O fault
      *@exception TupleUtilsException exception from this class
      */
-    public static void SetValue(Map value, Map  tuple, int fld_no, AttrType fldType)
+    public static void SetValue(Map value, Map  map, int fld_no, AttrType fldType)
             throws IOException,
             UnknowAttrType,
             TupleUtilsException
@@ -178,21 +321,21 @@ public class MapUtils
         {
             case AttrType.attrInteger:
                 try {
-                    value.setIntFld(fld_no, tuple.getIntFld(fld_no));
+                    value.setIntFld(fld_no, map.getIntFld(fld_no));
                 }catch (FieldNumberOutOfBoundException e){
                     throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
                 }
                 break;
             case AttrType.attrReal:
                 try {
-                    value.setFloFld(fld_no, tuple.getFloFld(fld_no));
+                    value.setFloFld(fld_no, map.getFloFld(fld_no));
                 }catch (FieldNumberOutOfBoundException e){
                     throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
                 }
                 break;
             case AttrType.attrString:
                 try {
-                    value.setStrFld(fld_no, tuple.getStrFld(fld_no));
+                    value.setStrFld(fld_no, map.getStrFld(fld_no));
                 }catch (FieldNumberOutOfBoundException e){
                     throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
                 }
@@ -208,7 +351,7 @@ public class MapUtils
 
     /**
      *set up the Jtuple's attrtype, string size,field number for using join
-     *@param Jtuple  reference to an actual tuple  - no memory has been malloced
+     *@param Jmap  reference to an actual tuple  - no memory has been malloced
      *@param res_attrs  attributes type of result tuple
      *@param in1  array of the attributes of the tuple (ok)
      *@param len_in1  num of attributes of in1
@@ -221,7 +364,7 @@ public class MapUtils
      *@exception IOException some I/O fault
      *@exception TupleUtilsException exception from this class
      */
-    public static short[] setup_op_tuple(Map Jtuple, AttrType[] res_attrs,
+    public static short[] setup_op_map(Map Jmap, AttrType[] res_attrs,
                                          AttrType in1[], int len_in1, AttrType in2[],
                                          int len_in2, short t1_str_sizes[],
                                          short t2_str_sizes[],
@@ -269,7 +412,7 @@ public class MapUtils
                 res_str_sizes[count++] = sizesT2[proj_list[i].offset-1];
         }
         try {
-            Jtuple.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
+            Jmap.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
         }catch (Exception e){
             throw new MapUtilsException(e,"setHdr() failed");
         }
@@ -279,7 +422,7 @@ public class MapUtils
 
     /**
      *set up the Jtuple's attrtype, string size,field number for using project
-     *@param Jtuple  reference to an actual tuple  - no memory has been malloced
+     *@param Jmap  reference to an actual tuple  - no memory has been malloced
      *@param res_attrs  attributes type of result tuple
      *@param in1  array of the attributes of the tuple (ok)
      *@param len_in1  num of attributes of in1
@@ -291,7 +434,7 @@ public class MapUtils
      *@exception InvalidRelation invalid relation
      */
 
-    public static short[] setup_op_tuple(Map Jtuple, AttrType res_attrs[],
+    public static short[] setup_op_map(Map Jmap, AttrType res_attrs[],
                                          AttrType in1[], int len_in1,
                                          short t1_str_sizes[],
                                          FldSpec proj_list[], int nOutFlds)
@@ -332,7 +475,7 @@ public class MapUtils
         }
 
         try {
-            Jtuple.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
+            Jmap.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
         }catch (Exception e){
             throw new MapUtilsException(e,"setHdr() failed");
         }

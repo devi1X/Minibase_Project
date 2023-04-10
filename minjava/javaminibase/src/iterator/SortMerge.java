@@ -111,7 +111,7 @@ public class SortMerge extends Iterator implements GlobalConst
       perm_mat = proj_list;
       nOutFlds = n_out_flds;
       try {
-	ts_size = MapUtils.setup_op_tuple(Jtuple, Jtypes,
+	ts_size = MapUtils.setup_op_map(Jtuple, Jtypes,
 					    in1, len_in1, in2, len_in2,
 					    s1_sizes, s2_sizes, 
 					    proj_list,n_out_flds );
