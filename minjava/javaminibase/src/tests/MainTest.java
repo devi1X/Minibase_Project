@@ -32,8 +32,8 @@ public class MainTest {
                     int type = Integer.parseInt(splits[2]);
                     String bigTableName = splits[3];
                     int NUMBUF = Integer.parseInt(splits[4]);
-                    //SystemDefs.JavabaseDB.pcounter.initialize();
-                    pcounter.initialize();
+                    SystemDefs.JavabaseDB.pcounter.initialize();
+                    //pcounter.initialize();
 //                    Batchinsert in = new Batchinsert();
                     Batchinsert bi = new Batchinsert(dataFileName,type,bigTableName,NUMBUF);
                     System.out.println("-------------Start Loading Data---------");
@@ -49,7 +49,7 @@ public class MainTest {
                     System.out.println("MapCnt" + bigTable.getMapCnt());
                     break;
                 case 2:
-                    pcounter.initialize();
+                    SystemDefs.JavabaseDB.pcounter.initialize();
                     QueryTest queryTest = new QueryTest();
                     System.out.println("-------------Start Query Test---------");
                     queryTest.runQueryTest(bigTable);

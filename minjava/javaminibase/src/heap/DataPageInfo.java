@@ -74,15 +74,15 @@ public class DataPageInfo implements GlobalConst{
    * #@param atuple: the input tuple
    */
   public DataPageInfo(Map _atuple)
-       throws InvalidTupleSizeException, IOException
-  {   
+       throws InvalidMapSizeException, IOException
+  {
      // need check _atuple size == this.size ?otherwise, throw new exception
     if (_atuple.getMapLength()!=12){
-      throw new InvalidTupleSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
+      throw new InvalidMapSizeException(null, "HEAPFILE: TUPLE SIZE ERROR");
     }
 
     else{
-      data = _atuple.returnMapByteArray();
+      data = _atuple.getMapByteArray();
       offset = _atuple.getMapOffset();
       
       availspace = Convert.getIntValue(offset, data);
