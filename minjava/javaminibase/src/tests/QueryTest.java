@@ -40,8 +40,7 @@ class QueryTest{
     public void runQueryTest(bigT bigTable){
 //        System.out.println("bigt name: " + bigTable.getBigtName() +
 //                ", bigt type: " + bigTable.getBigtType());
-        System.out.println("bigt name: " + bigTable.getBigtName() +
-                ", bigt type: ");
+        System.out.println("bigt name: " + bigTable.getBigtName());
 
 //        try{
 //            System.out.println("bigt map count: " + bigTable.getMapCnt());
@@ -68,6 +67,12 @@ class QueryTest{
 //                Stream stream = bigTable.openStream(Integer.parseInt(query[2]),
 //                        query[3],query[4],query[5]);
                 //stream.closestream();
+                for(int i=0; i< bigTable.mids.size(); i++){
+                    Map map = new Map();
+                    map = bigTable.heapfile.getRecord(bigTable.mids.elementAt(i));
+                    map.print();
+
+                }
             }
             catch (Exception e){
                 e.printStackTrace();

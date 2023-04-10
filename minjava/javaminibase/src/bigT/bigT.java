@@ -4,10 +4,7 @@ package bigT;
 import global.*;
 import heap.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import diskmgr.*;
 import bufmgr.*;
@@ -24,8 +21,8 @@ public class bigT{
 //    orderType not needed in phase 3 - Meng
 //    int orderType;
     //Stream stream;
-    Heapfile heapfile;
-
+    public Heapfile heapfile;
+    public Vector<MID> mids = new Vector<MID>();
     private ArrayList<Heapfile> heapFiles;
 
     HashMap<String, ArrayList<MID>> tempMap;
@@ -93,7 +90,11 @@ public class bigT{
         byte[] mapPtr = map.getMapByteArray();
         Heapfile hf = heapFiles.get(type);
         MID mid = hf.insertRecord(mapPtr);
-        return mid;
+        MID result_mid = new MID(mid.pageNo, mid.slotNo);
+
+        mids.add(result_mid);
+        //System.out.println(result_mid);
+        return result_mid;
     }
 
     //complete

@@ -40,6 +40,7 @@ public class MainTest {
 
                     //bi.runBatchInsert();
                     bigTable = bi.runInsertTest();
+                    //System.out.println(bigTable._firstDirPageId);
                     System.out.println("-------------Finish Loading Data---------");
 
                     System.out.println("The read count for insert test is: " + pcounter.rcounter);

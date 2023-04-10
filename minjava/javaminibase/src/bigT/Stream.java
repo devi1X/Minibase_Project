@@ -115,55 +115,54 @@ public class Stream implements GlobalConst{
      * @param //rid Record ID of the record
      * @return the Tuple of the retrieved record.
      */
-    public MID getNext()
-            throws InvalidTupleSizeException,
-            IOException, InvalidMapSizeException {
-        usermid = datapage.nextRecord(usermid);
-        if(usermid == null) nextUserStatus = false;
-        else nextUserStatus = true;
-
-        if (nextUserStatus != true) {
-            nextDataPage();
-            if (datapage == null)
-                return null;
-            else {
-                usermid = datapage.firstRecord();
-            }
-        }
-        return usermid;
-    }
-
-//    public Map getNext(MID mid)
+//    public MID getNext()
 //            throws InvalidTupleSizeException,
-//            IOException
-//    {
-//        Map recptrmap = null;
-//
-//        if (nextUserStatus != true) {
-//            nextDataPage();
-//        }
-//
-//        if (datapage == null)
-//            return null;
-//
-//        mid.pageNo.pid = usermid.pageNo.pid;
-//        mid.slotNo = usermid.slotNo;
-//
-//        try {
-//            recptrmap = datapage.getMap(mid);
-//        }
-//
-//        catch (Exception e) {
-//            //    System.err.println("SCAN: Error in Scan" + e);
-//            e.printStackTrace();
-//        }
-//
-//        usermid = datapage.nextMap(mid);
+//            IOException, InvalidMapSizeException {
+//        usermid = datapage.nextRecord(usermid);
 //        if(usermid == null) nextUserStatus = false;
 //        else nextUserStatus = true;
 //
-//        return recptrmap;
+//        if (nextUserStatus != true) {
+//            nextDataPage();
+//            if (datapage == null)
+//                return null;
+//            else {
+//                usermid = datapage.firstRecord();
+//            }
+//        }
+//        return usermid;
 //    }
+
+    public Map getNext(MID mid)
+            throws InvalidTupleSizeException,
+            IOException, InvalidMapSizeException {
+        Map recptrmap = null;
+
+        if (nextUserStatus != true) {
+            nextDataPage();
+        }
+
+        if (datapage == null)
+            return null;
+
+        mid.pageNo.pid = usermid.pageNo.pid;
+        mid.slotNo = usermid.slotNo;
+
+        try {
+            recptrmap = datapage.getRecord(mid);
+        }
+
+        catch (Exception e) {
+            //    System.err.println("SCAN: Error in Scan" + e);
+            e.printStackTrace();
+        }
+
+        usermid = datapage.nextRecord(mid);
+        if(usermid == null) nextUserStatus = false;
+        else nextUserStatus = true;
+
+        return recptrmap;
+    }
 
 
 
