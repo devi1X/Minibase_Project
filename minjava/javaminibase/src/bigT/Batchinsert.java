@@ -7,10 +7,11 @@ import btree.BTreeFile;
 import global.GlobalConst;
 import global.MID;
 import global.SystemDefs;
+import heap.HFBufMgrException;
+import heap.HFDiskMgrException;
+import heap.HFException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Vector;
 
 class Sailor {
@@ -42,6 +43,8 @@ public class Batchinsert{
     private int tableType;
     private int NUMBUF;
 
+    public int insertCount = 0;
+
     public Batchinsert(){
         //System.out.println("Please enter the fileName: ");
         // fileName = getCommand();
@@ -54,6 +57,57 @@ public class Batchinsert{
 
         System.out.println("Please enter the NUMBUF: ");
         NUMBUF = Integer.parseInt(getCommand());
+    }
+
+    public Batchinsert(String dataFileName, int type, String bigTName, int noBuffer) {
+        fileName = dataFileName;
+        tableType = type;
+        tableName = bigTName;
+        NUMBUF = noBuffer;
+    }
+    public void runBatchInsert() {
+//        SystemDef stuff, copied from the Sailor test section
+        String dbpath = "/tmp/"+System.getProperty("user.name")+".minibase.testdb";
+        String logpath = "/tmp/"+System.getProperty("user.name")+".testlog";
+
+        String remove_cmd = "/bin/rm -rf ";
+        String remove_logcmd = remove_cmd + logpath;
+        String remove_dbcmd = remove_cmd + dbpath;
+        String remove_joincmd = remove_cmd + dbpath;
+
+        try {
+            Runtime.getRuntime().exec(remove_logcmd);
+            Runtime.getRuntime().exec(remove_dbcmd);
+            Runtime.getRuntime().exec(remove_joincmd);
+        }
+        catch (IOException e) {
+            System.err.println (""+e);
+        }
+        SystemDefs sysdef = new SystemDefs(dbpath, 1000, NUMBUF, "Clock" );
+
+//Read file by each row, convert to map and insert into corresponding heapfile
+        File inputFile = new File(this.fileName);
+        try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
+            bigT table = new bigT(tableName);
+            String line;
+            while ((line = br.readLine()) != null) {
+                byte[] mapPtr = line.getBytes();
+                Map map = new Map(mapPtr, 0);
+                table.insertMap(map, tableType);
+                insertCount += 1;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HFDiskMgrException e) {
+            throw new RuntimeException(e);
+        } catch (HFException e) {
+            throw new RuntimeException(e);
+        } catch (HFBufMgrException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public bigT runInsertTest(){
@@ -117,7 +171,7 @@ public class Batchinsert{
         MID mid;
         bigtable = null;
         try {
-            bigtable = new bigT(tableName,tableType);
+            bigtable = new bigT(tableName);
         }
         catch (Exception e) {
             System.err.println("*** error in Heapfile constructor ***");

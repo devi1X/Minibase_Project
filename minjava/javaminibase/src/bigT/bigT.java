@@ -40,7 +40,9 @@ public class bigT{
 //        initialize 5 heapfiles, each with the name of i (0,1,2,3,4)
         heapFiles = new ArrayList<Heapfile>();
         for (int i = 0; i < 5; i++) {
-            heapFiles.add(new Heapfile(Integer.toString(i)));
+            String fileName = name + i;
+            Heapfile file = new Heapfile(fileName);
+            heapFiles.add(file);
         }
     }
     //complete

@@ -8,6 +8,7 @@ import global.GlobalConst;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class MainTest {
     public static void main(String[] args){
@@ -16,14 +17,29 @@ public class MainTest {
         while (choice != 3){
             switch (choice){
                 case 1:
+                    System.out.println("FORMAT: batchinsert DATAFILENAME TYPE BIGTABLENAME NUMBUF");
+                    Scanner sc = new Scanner(System.in);
+                    String batch = sc.nextLine();
+                    String[] splits = batch.split(" ");
+//                    if(splits.length!=5){
+//                        System.out.println("Wrong format, try again!");
+//                        continue;
+//                    }
+                    String dataFileName = splits[1];
+                    int type = Integer.parseInt(splits[2]);
+                    String bigTableName = splits[3];
+                    int NUMBUF = Integer.parseInt(splits[4]);
                     pcounter.initialize();
-                    Batchinsert in = new Batchinsert();
+//                    Batchinsert in = new Batchinsert();
+                    Batchinsert bi = new Batchinsert(dataFileName,type,bigTableName,NUMBUF);
                     System.out.println("-------------Start Loading Data---------");
-                    bigTable = in.runInsertTest();
+//                    bigTable = in.runInsertTest();
+                    bi.runBatchInsert();
                     System.out.println("-------------Finish Loading Data---------");
 
                     System.out.println("The read count for insert test is: " + pcounter.rcounter);
                     System.out.println("The write count for insert test is: " + pcounter.wcounter);
+                    System.out.println("Total num of inserted record: " + bi.insertCount);
                     break;
                 case 2:
                     //pcounter.initialize();

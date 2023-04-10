@@ -38,8 +38,10 @@ class QueryTest{
     }
 
     public void runQueryTest(bigT bigTable){
+//        System.out.println("bigt name: " + bigTable.getBigtName() +
+//                ", bigt type: " + bigTable.getBigtType());
         System.out.println("bigt name: " + bigTable.getBigtName() +
-                ", bigt type: " + bigTable.getBigtType());
+                ", bigt type: ");
 
 //        try{
 //            System.out.println("bigt map count: " + bigTable.getMapCnt());
@@ -53,9 +55,11 @@ class QueryTest{
 //                Integer.parseInt(query[6]), "Clock" );
 
         // check table name and type
-        if(!bigTable.getBigtName().equals(query[0]) &&
-                bigTable.getBigtType() != Integer.parseInt(query[1])){
-            System.out.println("Please enter the correct table name/type");
+//        if(!bigTable.getBigtName().equals(query[0]) &&
+//                bigTable.getBigtType() != Integer.parseInt(query[1])){
+        if(!bigTable.getBigtName().equals(query[0])){
+
+                System.out.println("Please enter the correct table name/type");
         }
         else{
             try {
