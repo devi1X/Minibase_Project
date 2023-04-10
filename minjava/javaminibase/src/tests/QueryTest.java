@@ -63,11 +63,10 @@ class QueryTest{
         }
         else{
             try {
-                //bigTable = new bigt(query[0],Integer.parseInt(query[1]));
-//                Stream stream = new Stream(bigTable,Integer.parseInt(query[2]),
+                //bigTable = new bigT(query[0],Integer.parseInt(query[1]));
+                Stream stream = new Stream(bigTable,Integer.parseInt(query[2]), query[3],query[4],query[5]);
+//                Stream stream = bigTable.openStream(Integer.parseInt(query[2]),
 //                        query[3],query[4],query[5]);
-                Stream stream = bigTable.openStream(Integer.parseInt(query[2]),
-                        query[3],query[4],query[5]);
                 //stream.closestream();
             }
             catch (Exception e){

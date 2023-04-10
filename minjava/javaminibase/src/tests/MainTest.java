@@ -38,7 +38,7 @@ public class MainTest {
                     Batchinsert bi = new Batchinsert(dataFileName,type,bigTableName,NUMBUF);
                     System.out.println("-------------Start Loading Data---------");
 
-                    bi.runBatchInsert();
+                    //bi.runBatchInsert();
                     bigTable = bi.runInsertTest();
                     System.out.println("-------------Finish Loading Data---------");
 
