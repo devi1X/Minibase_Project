@@ -194,7 +194,7 @@ public class MapUtils
                     t1_i = t1.getIntFld(t1_fld_no);
                     t2_i = t2.getIntFld(t2_fld_no);
                 }catch (FieldNumberOutOfBoundException e){
-                    throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+                    throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by MapUtils.java");
                 }
                 if (t1_i == t2_i) return  0;
                 if (t1_i <  t2_i) return -1;
@@ -205,7 +205,7 @@ public class MapUtils
                     t1_r = t1.getFloFld(t1_fld_no);
                     t2_r = t2.getFloFld(t2_fld_no);
                 }catch (FieldNumberOutOfBoundException e){
-                    throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+                    throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by MapUtils.java");
                 }
                 if (t1_r == t2_r) return  0;
                 if (t1_r <  t2_r) return -1;
@@ -216,7 +216,7 @@ public class MapUtils
                     t1_s = t1.getStrFld(t1_fld_no);
                     t2_s = t2.getStrFld(t2_fld_no);
                 }catch (FieldNumberOutOfBoundException e){
-                    throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+                    throw new MapUtilsException(e, "FieldNumberOutOfBoundException is caught by MapUtils.java");
                 }
 
                 // Now handle the special case that is posed by the max_values for strings...
@@ -323,21 +323,21 @@ public class MapUtils
                 try {
                     value.setIntFld(fld_no, map.getIntFld(fld_no));
                 }catch (FieldNumberOutOfBoundException e){
-                    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+                    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by MapUtils.java");
                 }
                 break;
             case AttrType.attrReal:
                 try {
                     value.setFloFld(fld_no, map.getFloFld(fld_no));
                 }catch (FieldNumberOutOfBoundException e){
-                    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+                    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by MapUtils.java");
                 }
                 break;
             case AttrType.attrString:
                 try {
                     value.setStrFld(fld_no, map.getStrFld(fld_no));
                 }catch (FieldNumberOutOfBoundException e){
-                    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+                    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by MapUtils.java");
                 }
                 break;
             default:
