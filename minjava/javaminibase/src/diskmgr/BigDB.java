@@ -814,7 +814,7 @@ public class BigDB implements GlobalConst {
 
   /**
    * short cut to access the pinPage function in bufmgr package.
-   * @see bufmgr.pinPage
+   * //@see bufmgr.pinPage
    */
   private void pinPage(PageId pageno, Page page, boolean emptyPage)
     throws DiskMgrException {
@@ -830,7 +830,7 @@ public class BigDB implements GlobalConst {
 
   /**
    * short cut to access the unpinPage function in bufmgr package.
-   * @see bufmgr.unpinPage
+   * //@see bufmgr.unpinPage
    */
   private void unpinPage(PageId pageno, boolean dirty)
     throws DiskMgrException {

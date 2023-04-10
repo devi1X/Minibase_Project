@@ -100,7 +100,7 @@ public class Batchinsert{
 //        }
 //    }
 
-    public bigT runInsertTest(){
+    public bigT runInsertTest() throws HFDiskMgrException, HFException, HFBufMgrException, IOException {
 
         boolean status = OK;
         int numsailors = 17;
@@ -160,17 +160,36 @@ public class Batchinsert{
         }
 
         File inputFile = new File(this.fileName);
+        bigT table = new bigT(tableName);
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
-            bigT table = new bigT(tableName);
+
             String line;
+            String[] labels;
+            Map map = new Map();
+
             while ((line = br.readLine()) != null) {
-                byte[] mapPtr = line.getBytes();
-                Map map = new Map(mapPtr, 0);
-                //System.out.println("insert in batchinsert before");
+                //System.out.println(line);
+                labels = line.split(",");
+                map.setHdr((short) 4, map.getAttrType(), map.getMapSizes());
+                map.setRowLabel(labels[0]);
+                map.setColumnLabel(labels[1]);
+                map.setTimeStamp(Integer.parseInt(labels[3]));
+                //map.setMapLength(line.length());
+                String valueLabel = labels[2];
+                for(int j=labels[2].length(); j < Map.DEFAULT_STRING_ATTRIBUTE_SIZE; j++){
+                    valueLabel = "0"+valueLabel;
+                }
+                map.setValue(valueLabel);
+                //map.print();
+                //byte[] mapPtr = line.getBytes();
+                //Map map = new Map(mapPtr, 0);
                 table.insertMap(map, tableType);
+                //map.getMapByteArray();
+
                 //System.out.println("insert in batchinsert after");
                 insertCount += 1;
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();

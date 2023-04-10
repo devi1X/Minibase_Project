@@ -66,10 +66,9 @@ public class Scan implements GlobalConst{
      *
      * @param hf A HeapFile object
      */
-  public Scan(Heapfile hf) 
-    throws InvalidTupleSizeException,
-	   IOException
-  {
+  public Scan(Heapfile hf)
+          throws InvalidTupleSizeException,
+          IOException, InvalidMapSizeException {
 	init(hf);
   }
 
@@ -84,9 +83,8 @@ public class Scan implements GlobalConst{
    * @return the Tuple of the retrieved record.
    */
   public Map getNext(MID rid)
-    throws InvalidTupleSizeException,
-	   IOException
-  {
+          throws InvalidTupleSizeException,
+          IOException, InvalidMapSizeException {
     Map recptrtuple = null;
     
     if (nextUserStatus != true) {
@@ -125,9 +123,8 @@ public class Scan implements GlobalConst{
      *			false otherwise.
      */
   public boolean position(MID rid)
-    throws InvalidTupleSizeException,
-	   IOException
-  { 
+          throws InvalidTupleSizeException,
+          IOException, InvalidMapSizeException {
     MID    nxtrid = new MID();
     boolean bst;
 
@@ -189,10 +186,9 @@ public class Scan implements GlobalConst{
      *
      * @param hf A HeapFile object
      */
-    private void init(Heapfile hf) 
-      throws InvalidTupleSizeException,
-	     IOException
-  {
+    private void init(Heapfile hf)
+            throws InvalidTupleSizeException,
+            IOException, InvalidMapSizeException {
 	_hf = hf;
 
     	firstDataPage();
@@ -246,10 +242,9 @@ public class Scan implements GlobalConst{
    * @return true if successful
    *         false otherwise
    */
-  private boolean firstDataPage() 
-    throws InvalidTupleSizeException,
-	   IOException
-  {
+  private boolean firstDataPage()
+          throws InvalidTupleSizeException,
+          IOException, InvalidMapSizeException {
     DataPageInfo dpinfo;
     Map        rectuple = null;
     Boolean      bst;
@@ -396,10 +391,9 @@ public class Scan implements GlobalConst{
    * @return 		true if successful
    *			false if unsuccessful
    */
-  private boolean nextDataPage() 
-    throws InvalidTupleSizeException,
-	   IOException
-  {
+  private boolean nextDataPage()
+          throws InvalidTupleSizeException,
+          IOException, InvalidMapSizeException {
     DataPageInfo dpinfo;
     
     boolean nextDataPageStatus;
@@ -593,9 +587,8 @@ public class Scan implements GlobalConst{
    * Also returns the RID of the (new) current record.
    */
   private boolean mvNext(MID rid)
-    throws InvalidTupleSizeException,
-	   IOException
-  {
+          throws InvalidTupleSizeException,
+          IOException, InvalidMapSizeException {
     MID nextrid;
     boolean status;
 
