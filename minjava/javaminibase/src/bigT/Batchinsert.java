@@ -93,7 +93,9 @@ public class Batchinsert{
             while ((line = br.readLine()) != null) {
                 byte[] mapPtr = line.getBytes();
                 Map map = new Map(mapPtr, 0);
+                //System.out.println("insert in batchinsert before");
                 table.insertMap(map, tableType);
+                //System.out.println("insert in batchinsert after");
                 insertCount += 1;
             }
 
@@ -202,16 +204,45 @@ public class Batchinsert{
                 e.printStackTrace();
             }
 
-            try {
-                mid = bigtable.insertMap(t.returnMapByteArray());
+//            try {
+//                System.out.println(t.getMapSizes());
+//                mid = bigtable.insertMap(t.returnMapByteArray());
+//                System.out.println(mid);
 //                String columLable = t.getColumnLabel();
 //                System.out.println("Column " + i + " Label: " + columLable);
-            }
-            catch (Exception e) {
-                System.err.println("*** error in map.insertMap() ***");
-                status = FAIL;
+//            }
+//            catch (Exception e) {
+//                System.err.println("*** error in map.insertMap() ***");
+//                status = FAIL;
+//                e.printStackTrace();
+//            }
+            File inputFile = new File(this.fileName);
+            try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
+                bigT table = new bigT(tableName);
+                String line;
+                while ((line = br.readLine()) != null) {
+                    byte[] mapPtr = line.getBytes();
+                    Map map = new Map(mapPtr, 0);
+                    //System.out.println("insert in batchinsert before");
+                    table.insertMap(map, tableType);
+                    //System.out.println("insert in batchinsert after");
+                    insertCount += 1;
+                }
+
+            } catch (IOException e) {
                 e.printStackTrace();
+            } catch (HFDiskMgrException e) {
+                throw new RuntimeException(e);
+            } catch (HFException e) {
+                throw new RuntimeException(e);
+            } catch (HFBufMgrException e) {
+                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+
+
+
         }
         if (status != OK) {
             //bail out

@@ -2,15 +2,16 @@
 
 package diskmgr;
 
-import java.io.*;
 
+import java.io.*;
+import bufmgr.*;
 import global.*;
 
 public class BigDB implements GlobalConst {
 
   
   private static final int bits_per_page = MAX_SPACE * 8;
-  
+  public static pcounter pcounter;
   
   /** Open the database with the given name.
    *
@@ -50,7 +51,9 @@ public class BigDB implements GlobalConst {
   
   /** default constructor.
    */
-  public BigDB() { }
+  public BigDB() {
+      pcounter = new pcounter();
+  }
   
   
   /** DB Constructors.

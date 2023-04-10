@@ -81,9 +81,10 @@ public class bigT{
     //This can be deleted once the Sailor part is removed? - Meng
     public MID insertMap(byte[] mapPtr) throws Exception {
         //removeOldMap(mapPtr, heapfile);
-
+        System.out.println("start insert");
         MID mid = this.heapfile.insertRecord(mapPtr);
         MID resultMID = new MID(mid.pageNo, mid.slotNo);
+        System.out.println("end insert");
         return resultMID;
     }
 
