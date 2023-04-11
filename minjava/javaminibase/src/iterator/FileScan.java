@@ -116,15 +116,16 @@ public class FileScan extends  Iterator
    *@exception WrongPermat exception for wrong FldSpec argument
    */
   public Map get_next()
-          throws JoinsException,
-          IOException,
-          InvalidTupleSizeException,
-          InvalidTypeException,
-          PageNotReadException,
-          PredEvalException,
-          UnknowAttrType,
-          FieldNumberOutOfBoundException,
-          WrongPermat, InvalidMapSizeException {
+    throws JoinsException,
+	   IOException,
+	   InvalidTupleSizeException,
+	   InvalidTypeException,
+	   PageNotReadException, 
+	   PredEvalException,
+	   UnknowAttrType,
+	   FieldNumberOutOfBoundException,
+	   WrongPermat
+    {     
       MID rid = new MID();;
       
       while(true) {

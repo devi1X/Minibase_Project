@@ -60,11 +60,8 @@ public class Batchinsert{
 
         bigtable = new bigT(tableName);
         File inputFile = new File(this.fileName);
-        bigT table = new bigT(tableName);
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             String line;
-            String[] labels;
-
             while ((line = br.readLine()) != null) {
                 line = line.replaceAll("[^\\x00-\\x7F]", "");
 
@@ -82,7 +79,6 @@ public class Batchinsert{
                 bigtable.insertMap(map, tableType);
                 insertCount += 1;
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();

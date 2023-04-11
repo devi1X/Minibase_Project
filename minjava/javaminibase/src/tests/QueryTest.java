@@ -50,7 +50,8 @@ class QueryTest{
 //        }
 
         String[] query = getQuery();
-        SystemDefs sysdef = new SystemDefs(dbpath, 1000, Integer.parseInt(query[6]), "Clock" );
+//        SystemDefs sysdef = new SystemDefs(dbpath, 1000,
+//                Integer.parseInt(query[6]), "Clock" );
 
         // check table name and type
 //        if(!bigTable.getBigtName().equals(query[0]) &&
@@ -66,7 +67,12 @@ class QueryTest{
 //                Stream stream = bigTable.openStream(Integer.parseInt(query[2]),
 //                        query[3],query[4],query[5]);
                 //stream.closestream();
+                for(int i=0; i< bigTable.mids.size(); i++){
+                    Map map = new Map();
+                    map = bigTable.heapfile.getRecord(bigTable.mids.elementAt(i));
+                    map.print();
 
+                }
             }
             catch (Exception e){
                 e.printStackTrace();

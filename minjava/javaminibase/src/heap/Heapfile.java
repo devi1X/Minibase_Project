@@ -302,12 +302,14 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @exception HFDiskMgrException exception thrown from diskmgr layer
    * @exception IOException I/O errors
    */
-  public int getRecCnt()
-		  throws InvalidSlotNumberException,
-		  InvalidTupleSizeException,
-		  HFDiskMgrException,
-		  HFBufMgrException,
-		  IOException, InvalidMapSizeException {
+  public int getRecCnt() 
+    throws InvalidSlotNumberException, 
+	   InvalidTupleSizeException, 
+	   HFDiskMgrException,
+	   HFBufMgrException,
+	   IOException
+	   
+    {
       int answer = 0;
       PageId currentDirPageId = new PageId(_firstDirPageId.pid);
       
@@ -367,13 +369,14 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @return the rid of the record
    */
   public MID insertRecord(byte[] recPtr)
-		  throws InvalidSlotNumberException,
-		  InvalidTupleSizeException,
-		  SpaceNotAvailableException,
-		  HFException,
-		  HFBufMgrException,
-		  HFDiskMgrException,
-		  IOException, InvalidMapSizeException {
+    throws InvalidSlotNumberException,  
+	   InvalidTupleSizeException,
+	   SpaceNotAvailableException,
+	   HFException,
+	   HFBufMgrException,
+	   HFDiskMgrException,
+	   IOException
+    {
       int dpinfoLen = 0;	
       int recLen = recPtr.length;
       boolean found;
@@ -867,9 +870,10 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @exception IOException I/O errors
    *
    */
-  public Scan openScan()
-		  throws InvalidTupleSizeException,
-		  IOException, InvalidMapSizeException {
+  public Scan openScan() 
+    throws InvalidTupleSizeException,
+	   IOException
+    {
       Scan newscan = new Scan(this);
       return newscan;
     }
@@ -884,13 +888,14 @@ public class Heapfile implements Filetype,  GlobalConst {
    * @exception HFDiskMgrException exception thrown from diskmgr layer
    * @exception IOException I/O errors
    */
-  public void deleteFile()
-		  throws InvalidSlotNumberException,
-		  FileAlreadyDeletedException,
-		  InvalidTupleSizeException,
-		  HFBufMgrException,
-		  HFDiskMgrException,
-		  IOException, InvalidMapSizeException {
+  public void deleteFile()  
+    throws InvalidSlotNumberException, 
+	   FileAlreadyDeletedException, 
+	   InvalidTupleSizeException, 
+	   HFBufMgrException,
+	   HFDiskMgrException,
+	   IOException
+    {
       if(_file_deleted ) 
    	throw new FileAlreadyDeletedException(null, "file alread deleted");
       
