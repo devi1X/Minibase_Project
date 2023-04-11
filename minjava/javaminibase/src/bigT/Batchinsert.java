@@ -68,14 +68,28 @@ public class Batchinsert{
                 String[] fields = line.split(",");
                 Map map = new Map();
                 map.setDefaultHdr();
-                String rl = fields[0];
-                String cl = fields[1];
-                int ts = Integer.parseInt(fields[2]);
-                String val = fields[3];
-                map.setRowLabel(rl);
-                map.setColumnLabel(cl);
-                map.setTimeStamp(ts);
-                map.setValue(val);
+//                String rl = fields[0];
+//                String cl = fields[1];
+//                int ts = Integer.parseInt(fields[2]);
+//                String val = fields[3];
+//                map.setRowLabel(rl);
+//                map.setColumnLabel(cl);
+//                map.setTimeStamp(ts);
+//                map.setValue(val);
+
+//                SSS used fields[2] for value and fields[3] for timestamp
+//                I think it should be the other way, so I swapped it below
+//                But his method worked. So there might be a reason
+//                Just leave a note here for future reference... Meng
+                map.setRowLabel(fields[0]);
+                map.setColumnLabel(fields[1]);
+                map.setTimeStamp(Integer.parseInt(fields[2]));
+                String valueLabel = fields[3];
+                for(int j=fields[3].length(); j < Map.DEFAULT_STRING_ATTRIBUTE_SIZE; j++){
+                    valueLabel = "0"+valueLabel;
+                }
+                map.setValue(valueLabel);
+
                 bigtable.insertMap(map, tableType);
                 insertCount += 1;
             }
