@@ -32,7 +32,7 @@ public class Batchinsert{
     private int NUMBUF;
 
     public int insertCount = 0;
-
+    //public  Vector<MID> mids = new Vector<MID>();
     public Batchinsert(){
         System.out.println("Please enter the table name: ");
         tableName = getCommand();
@@ -89,8 +89,8 @@ public class Batchinsert{
                     valueLabel = "0"+valueLabel;
                 }
                 map.setValue(valueLabel);
-
-                bigtable.insertMap(map, tableType);
+                MID temp = bigtable.insertMap(map, tableType);
+                bigtable.mids.add(temp);
                 insertCount += 1;
             }
 

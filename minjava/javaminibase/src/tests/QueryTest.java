@@ -67,12 +67,13 @@ class QueryTest{
 //                Stream stream = bigTable.openStream(Integer.parseInt(query[2]),
 //                        query[3],query[4],query[5]);
                 //stream.closestream();
-                for(int i=0; i< bigTable.mids.size(); i++){
-                    Map map = new Map();
-                    map = bigTable.heapfile.getRecord(bigTable.mids.elementAt(i));
+                for(int i = 0; i < bigTable.mids.size();i++){
+
+                    Map map = bigTable.getMap(i);
                     map.print();
 
                 }
+
             }
             catch (Exception e){
                 e.printStackTrace();

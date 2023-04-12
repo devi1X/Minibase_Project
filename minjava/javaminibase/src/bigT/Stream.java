@@ -82,7 +82,7 @@ public class Stream implements GlobalConst{
     private String rowFilter;
     private String columnFilter;
     private String valueFilter;
-    public Stream(bigT bigtable, int orderType, java.lang.String rowFilter, java.lang.String columnFilter, java.lang.String valueFilter){
+    public Stream(bigT bigtable, int orderType, java.lang.String rowFilter, java.lang.String columnFilter, java.lang.String valueFilter) throws Exception {
         this.bigtable = bigtable;
         this.orderType = orderType;
         this.rowFilter = rowFilter;
@@ -96,6 +96,15 @@ public class Stream implements GlobalConst{
                 System.out.println("order Type2");
             case 3:
                 System.out.println("order Type3");
+//                for(int i=0; i< bigtable.mids.size(); i++){
+////                    Map map = new Map();
+////                    //System.out.println(bigtable.mids.elementAt(i));
+////                    //map = bigtable.heapfile.getRecord(bigtable.mids.elementAt(i));
+////                    map = _hf.getRecord(bigtable.mids.elementAt(i));
+////                    map.print();
+////                    break;
+////
+////                }
             case 4:
                 System.out.println("order Type4");
             case 5:

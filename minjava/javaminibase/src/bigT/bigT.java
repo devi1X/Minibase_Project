@@ -92,7 +92,7 @@ public class bigT{
         MID mid = hf.insertRecord(mapPtr);
 //        MID result_mid = new MID(mid.pageNo, mid.slotNo);
 //
-//        mids.add(result_mid);
+        mids.add(mid);
 //        //System.out.println(result_mid);
 //        return result_mid;
         return mid;
@@ -105,6 +105,12 @@ public class bigT{
 
     public String getBigtName() {
         return this.tableName;
+    }
+    public Map getMap(int index) throws Exception {
+        System.out.println(mids.elementAt(index));
+        Map map = this.heapfile.getRecord(mids.elementAt(index));
+
+        return map;
     }
 
 //    public int getBigtType() {
