@@ -124,23 +124,23 @@ public class Stream implements GlobalConst{
      * @param //rid Record ID of the record
      * @return the Tuple of the retrieved record.
      */
-//    public MID getNext()
-//            throws InvalidTupleSizeException,
-//            IOException, InvalidMapSizeException {
-//        usermid = datapage.nextRecord(usermid);
-//        if(usermid == null) nextUserStatus = false;
-//        else nextUserStatus = true;
-//
-//        if (nextUserStatus != true) {
-//            nextDataPage();
-//            if (datapage == null)
-//                return null;
-//            else {
-//                usermid = datapage.firstRecord();
-//            }
-//        }
-//        return usermid;
-//    }
+    public MID getNextMID()
+            throws InvalidTupleSizeException,
+            IOException, InvalidMapSizeException {
+        usermid = datapage.nextRecord(usermid);
+        if(usermid == null) nextUserStatus = false;
+        else nextUserStatus = true;
+
+        if (nextUserStatus != true) {
+            nextDataPage();
+            if (datapage == null)
+                return null;
+            else {
+                usermid = datapage.firstRecord();
+            }
+        }
+        return usermid;
+    }
 
     public Map getNext(MID mid)
             throws InvalidTupleSizeException,

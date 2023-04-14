@@ -1,6 +1,7 @@
 package bigT;
 
 
+import btree.*;
 import global.*;
 import heap.*;
 import java.io.*;
@@ -23,23 +24,31 @@ public class bigT{
     //Stream stream;
     public Heapfile heapfile;
     public Vector<MID> mids = new Vector<MID>();
-    private ArrayList<Heapfile> heapFiles;
+    public ArrayList<Heapfile> heapFiles;
+
+    public ArrayList<BTreeFile> indexFiles;
 
     HashMap<String, ArrayList<MID>> tempMap;
 
     //这里需求理解错了，"between1 and 5 and the different types will correspond to different clustering and indexing strategies you
     //will use for the bigtable." Type也是index/Cluster类型 Let me do it.
-    public bigT(java.lang.String name) throws IOException, HFException, HFBufMgrException, HFDiskMgrException {
+    public bigT(java.lang.String name) throws IOException, HFException, HFBufMgrException, HFDiskMgrException, ConstructPageException, GetFileEntryException, PinPageException {
 
         tableName = name;
 //        orderType = type;
 //        heapfile = new Heapfile(name);
-//        initialize 5 heapfiles, each with the name of i (0,1,2,3,4)
+//        initialize 5 heapfiles, each with the name of i (1,2,3,4,5)
         heapFiles = new ArrayList<Heapfile>();
-        for (int i = 0; i < 5; i++) {
+        indexFiles = new ArrayList<BTreeFile>();
+        for (int i = 1; i < 6; i++) {
             String fileName = name + i;
-            Heapfile file = new Heapfile(fileName);
-            heapFiles.add(file);
+            Heapfile heapFile = new Heapfile(fileName);
+            heapFiles.add(heapFile);
+//            no index file for type 1
+            if (i != 1) {
+                BTreeFile indexFile = new BTreeFile(fileName);
+                indexFiles.add(indexFile);
+            }
         }
     }
     //complete

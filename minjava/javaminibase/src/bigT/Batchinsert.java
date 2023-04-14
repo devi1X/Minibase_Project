@@ -4,12 +4,11 @@ import bigT.Map;
 import bigT.bigT;
 import btree.BTFileScan;
 import btree.BTreeFile;
+import btree.StringKey;
 import global.GlobalConst;
 import global.MID;
 import global.SystemDefs;
-import heap.HFBufMgrException;
-import heap.HFDiskMgrException;
-import heap.HFException;
+import heap.*;
 
 import java.io.*;
 import java.util.Vector;
@@ -51,7 +50,7 @@ public class Batchinsert{
         NUMBUF = noBuffer;
     }
 
-    public bigT runInsertTest() throws HFDiskMgrException, HFException, HFBufMgrException, IOException {
+    public bigT runInsertTest() throws Exception {
 
         boolean status = OK;
 
@@ -111,21 +110,57 @@ public class Batchinsert{
             Runtime.getRuntime().exit(1);
         }
 
-
+//        get the heapfile that's corresponding to the type, add heapfile into index map
+//        index minus one because the file name starts from 1
+//        This can be made into another function. But for now it stays like this
+        if (tableType != 1) {
+            Heapfile heapfile = bigtable.heapFiles.get(tableType - 1);
+            BTreeFile indexFile = bigtable.indexFiles.get(tableType - 1);
+            Stream stream = new Stream(heapfile);
+            MID mid = stream.getNextMID();
+//            System.out.println(mid.pageNo);
+            while (mid != null) {
+                Map map = heapfile.getRecord(mid);
+                StringKey key = null;
+                //            switch (tableType) {
+                //                case 2 -> key = new StringKey(map.getRowLabel());
+                //                case 3 -> key = new StringKey(map.getColumnLabel());
+                //                case 4 -> key = new StringKey(map.getRowLabel() + '%' + map.getRowLabel());
+                //                case 5 -> key = new StringKey(map.getRowLabel() + '%' + map.getValue());
+                //            }
+                switch (tableType) {
+                    case 2:
+                        key = new StringKey(map.getRowLabel());
+                        break;
+                    case 3:
+                        key = new StringKey(map.getColumnLabel());
+                        break;
+                    case 4:
+                        key = new StringKey(map.getRowLabel() + '%' + map.getRowLabel());
+                        break;
+                    case 5:
+                        key = new StringKey(map.getRowLabel() + '%' + map.getValue());
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Invalid table type");
+                }
+                indexFile.insert(key, mid);
+                System.out.println(key.toString());
+                mid = stream.getNextMID();
+            }
+            stream.closestream();
+        }
         try {
             int mapcount = bigtable.getMapCnt();
-            System.out.println ("There are " + mapcount + " maps");
+            System.out.println("There are " + mapcount + " maps");
             //System.out.println(bigtable.heapfile);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("*** error in Map.getMapCnt() ***");
             status = FAIL;
             e.printStackTrace();
         }
-
         return bigtable;
     }
-
     public String getCommand(){
         BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
         String s = null;
