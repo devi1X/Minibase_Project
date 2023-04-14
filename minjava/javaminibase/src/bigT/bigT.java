@@ -38,14 +38,15 @@ public class bigT{
 //        orderType = type;
 //        heapfile = new Heapfile(name);
 //        initialize 5 heapfiles, each with the name of i (1,2,3,4,5)
+//        initialize 5 indexfiles
         heapFiles = new ArrayList<Heapfile>();
-        indexFiles = new ArrayList<BTreeFile>();
+        indexFiles = new ArrayList<BTreeFile>(5);
         for (int i = 1; i < 6; i++) {
             String fileName = name + i;
             Heapfile heapFile = new Heapfile(fileName);
             heapFiles.add(heapFile);
-//            Create index files and add to the list:
             BTreeFile tempIndex=null;
+//            Create index files and add to the list:
             switch(i){
                 case 1:
                     break;
@@ -59,11 +60,7 @@ public class bigT{
                             Map.DEFAULT_STRING_ATTRIBUTE_SIZE * 2 + 5, DeleteFashion.NAIVE_DELETE);
                     break;
             }
-
-//            no index file for type 1
-            if (i != 1) {
-                indexFiles.add(tempIndex);
-            }
+            indexFiles.add(i - 1, tempIndex);
         }
     }
     //complete

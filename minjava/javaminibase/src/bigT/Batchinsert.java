@@ -55,7 +55,7 @@ public class Batchinsert{
         boolean status = OK;
 
         String dbpath = "/tmp/"+System.getProperty("user.name")+".minibase.testdb";
-        SystemDefs sysdef = new SystemDefs(dbpath, 1000, NUMBUF, "Clock" );
+        SystemDefs sysdef = new SystemDefs(dbpath, 9000, NUMBUF, "Clock" );
 
         bigtable = new bigT(tableName);
         File inputFile = new File(this.fileName);
@@ -110,7 +110,7 @@ public class Batchinsert{
             Runtime.getRuntime().exit(1);
         }
 
-//        get the heapfile that's corresponding to the type, add heapfile into index map
+//        get the heapfile that's corresponding to the type, add indexfile into index map
 //        index minus one because the file name starts from 1
 //        This can be made into another function. But for now it stays like this for convenience
         if (tableType != 1) {
@@ -137,11 +137,9 @@ public class Batchinsert{
                     default:
                         throw new IllegalArgumentException("Invalid table type");
                 }
-//                index files are named similar to its corresponding heapfile
-//                for example, for tableName = "myTable", tableType = 3, heapfile name will be "myTable3", indexfile name will be "myTable3i"
-                String fileName = this.tableName + tableType + "i";
-                indexFile = new BTreeFile(fileName);
+                indexFile = bigtable.indexFiles.get(tableType - 1);
                 indexFile.insert(key, mid);
+
                 mid = stream.getNextMID();
             }
             stream.closestream();
