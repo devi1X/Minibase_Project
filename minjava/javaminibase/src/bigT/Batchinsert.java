@@ -112,22 +112,15 @@ public class Batchinsert{
 
 //        get the heapfile that's corresponding to the type, add heapfile into index map
 //        index minus one because the file name starts from 1
-//        This can be made into another function. But for now it stays like this
+//        This can be made into another function. But for now it stays like this for convenience
         if (tableType != 1) {
             Heapfile heapfile = bigtable.heapFiles.get(tableType - 1);
-            BTreeFile indexFile = bigtable.indexFiles.get(tableType - 1);
             Stream stream = new Stream(heapfile);
             MID mid = stream.getNextMID();
-//            System.out.println(mid.pageNo);
+            BTreeFile indexFile = null;
             while (mid != null) {
                 Map map = heapfile.getRecord(mid);
                 StringKey key = null;
-                //            switch (tableType) {
-                //                case 2 -> key = new StringKey(map.getRowLabel());
-                //                case 3 -> key = new StringKey(map.getColumnLabel());
-                //                case 4 -> key = new StringKey(map.getRowLabel() + '%' + map.getRowLabel());
-                //                case 5 -> key = new StringKey(map.getRowLabel() + '%' + map.getValue());
-                //            }
                 switch (tableType) {
                     case 2:
                         key = new StringKey(map.getRowLabel());
@@ -144,8 +137,11 @@ public class Batchinsert{
                     default:
                         throw new IllegalArgumentException("Invalid table type");
                 }
+//                index files are named similar to its corresponding heapfile
+//                for example, for tableName = "myTable", tableType = 3, heapfile name will be "myTable3", indexfile name will be "myTable3i"
+                String fileName = this.tableName + tableType + "i";
+                indexFile = new BTreeFile(fileName);
                 indexFile.insert(key, mid);
-                System.out.println(key.toString());
                 mid = stream.getNextMID();
             }
             stream.closestream();

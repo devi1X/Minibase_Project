@@ -32,7 +32,7 @@ public class bigT{
 
     //这里需求理解错了，"between1 and 5 and the different types will correspond to different clustering and indexing strategies you
     //will use for the bigtable." Type也是index/Cluster类型 Let me do it.
-    public bigT(java.lang.String name) throws IOException, HFException, HFBufMgrException, HFDiskMgrException, ConstructPageException, GetFileEntryException, PinPageException {
+    public bigT(String name) throws IOException, HFException, HFBufMgrException, HFDiskMgrException, ConstructPageException, GetFileEntryException, PinPageException, AddFileEntryException {
 
         tableName = name;
 //        orderType = type;
@@ -44,10 +44,25 @@ public class bigT{
             String fileName = name + i;
             Heapfile heapFile = new Heapfile(fileName);
             heapFiles.add(heapFile);
+//            Create index files and add to the list:
+            BTreeFile tempIndex=null;
+            switch(i){
+                case 1:
+                    break;
+                case 2:
+                case 3:
+                    tempIndex = new BTreeFile(fileName + "i", AttrType.attrString, Map.DEFAULT_STRING_ATTRIBUTE_SIZE, DeleteFashion.NAIVE_DELETE);
+                    break;
+                case 4:
+                case 5:
+                    tempIndex = new BTreeFile(fileName + "i", AttrType.attrString,
+                            Map.DEFAULT_STRING_ATTRIBUTE_SIZE * 2 + 5, DeleteFashion.NAIVE_DELETE);
+                    break;
+            }
+
 //            no index file for type 1
             if (i != 1) {
-                BTreeFile indexFile = new BTreeFile(fileName);
-                indexFiles.add(indexFile);
+                indexFiles.add(tempIndex);
             }
         }
     }
@@ -97,7 +112,7 @@ public class bigT{
 //    New constructor that takes map and storage type. Need to implement the limit 3 records function - Meng
     public MID insertMap(Map map, int type) throws Exception {
         byte[] mapPtr = map.getMapByteArray();
-        Heapfile hf = heapFiles.get(type);
+        Heapfile hf = heapFiles.get(type - 1);
         MID mid = hf.insertRecord(mapPtr);
 //        MID result_mid = new MID(mid.pageNo, mid.slotNo);
 //
